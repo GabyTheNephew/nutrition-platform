@@ -1,3 +1,41 @@
+server:
+  port: 8080
+
 spring:
   application:
     name: gatewayserver
+  cloud:
+    gateway:
+      server:
+        webflux:
+          discovery:
+            locator:
+              enabled: true
+              lower-case-service-id: true
+          routes:
+            # Ruta 1: Food Catalog Service
+            - id: food-catalog-service
+              uri: lb://food-catalog-service
+              predicates:
+                - Path=/api/foods/**
+
+            # Ruta 2: Meal Prep Service (pregatita pentru pasul urmator)
+            - id: meal-prep-service
+              uri: lb://meal-prep-service
+              predicates:
+                - Path=/api/recipes/**, /api/meal-plans/**, /api/groceries/**
+
+            # Ruta 3: AI Recipe Service (pregatita pentru viitor)
+            - id: ai-recipe-service
+              uri: lb://ai-recipe-service
+              predicates:
+                - Path=/api/ai/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka/}
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
