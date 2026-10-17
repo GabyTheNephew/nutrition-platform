@@ -11,4 +11,5 @@ public interface IMealPlanService {
     MealPlanDTO getMealPlanById(UUID id);
     ShoppingListResponseDTO generateShoppingList(UUID mealPlanId);
     GroceryPriceDTO recordGroceryPrice(GroceryPriceCreateDTO dto);
+    void deleteMealPlan(UUID id);
 }

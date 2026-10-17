@@ -140,4 +140,15 @@ public class MealPlanService implements IMealPlanService {
                 .recordedDate(saved.getRecordedDate())
                 .build();
     }
+
+    @Override
+    @Transactional
+    public void deleteMealPlan(UUID id) {
+        if (!mealPlanRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Planul cu ID-ul " + id + " nu a fost găsit.");
+        }
+
+        mealPlanRepository.deleteById(id);
+    }
+
 }

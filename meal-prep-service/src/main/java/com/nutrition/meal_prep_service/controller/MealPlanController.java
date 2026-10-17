@@ -44,4 +44,10 @@ public class MealPlanController {
         GroceryPriceDTO created = mealPlanService.recordGroceryPrice(dto);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteMealPlan(@PathVariable UUID id) {
+        mealPlanService.deleteMealPlan(id);
+        return ResponseEntity.noContent().build();
+    }
 }
