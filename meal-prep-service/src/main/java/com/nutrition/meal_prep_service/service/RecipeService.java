@@ -2,26 +2,35 @@ package com.nutrition.meal_prep_service.service;
 
 import com.nutrition.meal_prep_service.client.FoodCatalogClient;
 import com.nutrition.meal_prep_service.dto.RecipeCreateDTO;
+import com.nutrition.meal_prep_service.dto.RecipeDTO;
 import com.nutrition.meal_prep_service.dto.RecipeIngredientCreateDTO;
 import com.nutrition.meal_prep_service.dto.external.FoodItemDTO;
 import com.nutrition.meal_prep_service.entity.Recipe;
 import com.nutrition.meal_prep_service.entity.RecipeIngredient;
+import com.nutrition.meal_prep_service.exception.BusinessException;
+import com.nutrition.meal_prep_service.exception.ResourceNotFoundException;
+import com.nutrition.meal_prep_service.mapper.RecipeMapper;
 import com.nutrition.meal_prep_service.repository.RecipeRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class RecipeService {
+public class RecipeService implements IRecipeService {
 
     private final RecipeRepository recipeRepository;
+    private final RecipeMapper recipeMapper;
     private final FoodCatalogClient foodCatalogClient;
 
+    @Override
     @Transactional
-    public Recipe createRecipe(RecipeCreateDTO dto) {
+    public RecipeDTO createRecipe(RecipeCreateDTO dto) {
         if (recipeRepository.existsByNameIgnoreCase(dto.getName())) {
-            throw new RuntimeException("Rețeta cu acest nume există deja!");
+            throw new BusinessException("Rețeta cu numele '" + dto.getName() + "' există deja.");
         }
 
         Recipe recipe = Recipe.builder()
@@ -53,6 +62,32 @@ public class RecipeService {
             recipe.addIngredient(ingredient);
         }
 
-        return recipeRepository.save(recipe);
+        Recipe savedRecipe = recipeRepository.save(recipe);
+        return recipeMapper.toDTO(savedRecipe);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<RecipeDTO> getAllRecipes() {
+        return recipeRepository.findAll().stream()
+                .map(recipeMapper::toDTO)
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public RecipeDTO getRecipeById(UUID id) {
+        Recipe recipe = recipeRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Rețeta cu ID-ul " + id + " nu a fost găsită."));
+        return recipeMapper.toDTO(recipe);
+    }
+
+    @Override
+    @Transactional
+    public void deleteRecipe(UUID id) {
+        if (!recipeRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Rețeta cu ID-ul " + id + " nu a fost găsită.");
+        }
+        recipeRepository.deleteById(id);
     }
 }
