@@ -67,3 +67,13 @@ meal-prep-service/.gitattributes
 meal-prep-service/HELP.md
 meal-prep-service/mvnw
 meal-prep-service/mvnw.cmd
+
+
+### --- Spring Initializr Boilerplate per modul ---
+**/HELP.md
+**/.gitattributes
+
+### --- Maven Wrapper duplicate per submodul ---
+**/mvnw
+**/mvnw.cmd
+**/.mvn/
