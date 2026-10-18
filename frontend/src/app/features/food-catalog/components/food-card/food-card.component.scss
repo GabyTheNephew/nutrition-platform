@@ -1,0 +1,94 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.food-card {
+  height: 100%;
+  box-sizing: border-box;
+  background-color: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+  }
+
+  .card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin: 0 0 1rem 0;
+  }
+
+  .macro-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.25rem 0;
+
+    li {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.35rem 0;
+      font-size: 0.95rem;
+      color: #4a5568;
+      border-bottom: 1px dashed #edf2f7;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      strong {
+        color: #2d3748;
+      }
+    }
+  }
+
+  .card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 0.75rem;
+    border-top: 1px solid #edf2f7;
+
+    .label {
+      font-size: 0.85rem;
+      color: #718096;
+      font-weight: 500;
+    }
+  }
+}
+
+.macro-badge {
+  padding: 0.3rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+
+  &.protein {
+    background-color: #e6fffa;
+    color: #234e52;
+    border: 1px solid #b2f5ea;
+  }
+
+  &.carbohydrate {
+    background-color: #feebc8;
+    color: #744210;
+    border: 1px solid #fbd38d;
+  }
+
+  &.fat {
+    background-color: #fed7d7;
+    color: #742a2a;
+    border: 1px solid #feb2b2;
+  }
+}
