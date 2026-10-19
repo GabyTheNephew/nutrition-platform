@@ -1,0 +1,41 @@
+<article class="recipe-card">
+  <div class="card-header">
+    <h3 class="recipe-title">{{ recipe.name }}</h3>
+    <span class="servings-badge">{{ recipe.servings }} porții</span>
+  </div>
+
+  <div class="macro-summary">
+    <div class="macro-item calories">
+      <span class="val">{{ recipe.totalCalories | number:'1.0-0' }}</span>
+      <span class="lbl">kcal</span>
+    </div>
+    <div class="macro-item">
+      <span class="val">{{ recipe.totalProtein | number:'1.1-1' }}g</span>
+      <span class="lbl">Proteine</span>
+    </div>
+    <div class="macro-item">
+      <span class="val">{{ recipe.totalCarbohydrates | number:'1.1-1' }}g</span>
+      <span class="lbl">Carbo</span>
+    </div>
+    <div class="macro-item">
+      <span class="val">{{ recipe.totalFat | number:'1.1-1' }}g</span>
+      <span class="lbl">Grăsimi</span>
+    </div>
+  </div>
+
+  <div class="ingredients-section">
+    <h4>Ingrediente:</h4>
+    <ul>
+      @for (ing of recipe.ingredients; track ing.id) {
+        <li>
+          <span>{{ ing.foodName }}</span>
+          <strong>{{ ing.quantityGrams }}g</strong>
+        </li>
+      }
+    </ul>
+  </div>
+
+  @if (recipe.instructions) {
+    <p class="instructions">{{ recipe.instructions }}</p>
+  }
+</article>
