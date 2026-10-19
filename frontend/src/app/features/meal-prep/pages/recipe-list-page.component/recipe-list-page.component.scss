@@ -18,6 +18,22 @@
       color: #64748b;
       margin: 0.25rem 0 0;
     }
+
+    .btn-primary {
+      text-decoration: none;
+      background-color: #2563eb;
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 0.65rem 1.2rem;
+      border-radius: 8px;
+      transition: background-color 0.2s ease;
+      white-space: nowrap;
+
+      &:hover {
+        background-color: #1d4ed8;
+      }
+    }
   }
 
   .recipes-grid {
@@ -44,5 +60,22 @@
     border-radius: 8px;
     border: 1px dashed #cbd5e1;
     color: #64748b;
+
+    .btn-secondary {
+      display: inline-block;
+      margin-top: 1rem;
+      text-decoration: none;
+      background: #eff6ff;
+      color: #2563eb;
+      border: 1px solid #bfdbfe;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.9rem;
+
+      &:hover {
+        background: #dbeafe;
+      }
+    }
   }
 }

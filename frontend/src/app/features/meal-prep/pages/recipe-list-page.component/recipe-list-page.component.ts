@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { RecipeApiService } from '../../services/recipe-api.service';
 import { Recipe } from '../../models/recipe.model';
 import { RecipeCardComponent } from '../../components/recipe-card.component/recipe-card.component';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-recipe-list-page',
   standalone: true,
-  imports: [CommonModule, RecipeCardComponent],
+  imports: [CommonModule, RecipeCardComponent, RouterLink],
   templateUrl: './recipe-list-page.component.html',
   styleUrl: './recipe-list-page.component.scss'
 })
