@@ -1,0 +1,81 @@
+.saved-plans-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.25rem;
+
+  h4 {
+    margin: 0 0 0.85rem;
+    font-size: 0.95rem;
+    color: #334155;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .saved-plans-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+
+    li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.6rem 0.75rem;
+      background: #f8fafc;
+      border: 1px solid #f1f5f9;
+      border-radius: 6px;
+
+      strong {
+        font-size: 0.9rem;
+        color: #1e293b;
+      }
+
+      .plan-dates {
+        font-size: 0.8rem;
+        color: #64748b;
+        margin-left: 0.4rem;
+      }
+
+      .item-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        .btn-view-list {
+          background: #e0f2fe;
+          color: #0369a1;
+          border: 1px solid #bae6fd;
+          padding: 0.35rem 0.75rem;
+          border-radius: 6px;
+          font-size: 0.8rem;
+          font-weight: 600;
+          cursor: pointer;
+
+          &:hover {
+            background: #bae6fd;
+          }
+        }
+
+        .btn-delete-plan {
+          background: #fee2e2;
+          color: #b91c1c;
+          border: 1px solid #fecaca;
+          padding: 0.35rem 0.6rem;
+          border-radius: 6px;
+          font-size: 0.8rem;
+          font-weight: 700;
+          cursor: pointer;
+          transition: background-color 0.2s;
+
+          &:hover {
+            background: #fca5a5;
+          }
+        }
+      }
+    }
+  }
+}

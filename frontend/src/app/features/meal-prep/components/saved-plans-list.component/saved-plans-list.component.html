@@ -1,0 +1,21 @@
+<section class="saved-plans-card">
+  <h4>Planuri Săptămânale Recente</h4>
+  <ul class="saved-plans-list">
+    @for (plan of plans; track plan.id) {
+      <li>
+        <div>
+          <strong>{{ plan.name }}</strong>
+          <span class="plan-dates">({{ plan.startDate }} — {{ plan.endDate }})</span>
+        </div>
+        <div class="item-actions">
+          <button type="button" class="btn-view-list" (click)="onSelectShoppingList(plan.id)">
+            Vezi Cumpărături
+          </button>
+          <button type="button" class="btn-delete-plan" (click)="onDelete(plan.id)" title="Șterge plan">
+            ✕
+          </button>
+        </div>
+      </li>
+    }
+  </ul>
+</section>

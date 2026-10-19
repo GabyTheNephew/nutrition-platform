@@ -1,0 +1,74 @@
+.shopping-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04);
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.25rem;
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 1rem;
+
+    h3 {
+      margin: 0;
+      font-size: 1.25rem;
+      color: #0f172a;
+    }
+
+    .subtitle {
+      margin: 0.25rem 0 0;
+      color: #64748b;
+      font-size: 0.85rem;
+    }
+
+    .total-badge {
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      color: #065f46;
+      padding: 0.5rem 0.85rem;
+      border-radius: 8px;
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+
+      span {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+      }
+
+      strong {
+        font-size: 1.15rem;
+      }
+    }
+  }
+
+  .shopping-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th {
+      text-align: left;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #64748b;
+      border-bottom: 2px solid #e2e8f0;
+      padding: 0.6rem 0.5rem;
+    }
+
+    td {
+      padding: 0.75rem 0.5rem;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 0.9rem;
+      color: #334155;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+  }
+}

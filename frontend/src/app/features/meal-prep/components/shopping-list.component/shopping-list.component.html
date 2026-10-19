@@ -1,0 +1,31 @@
+<article class="shopping-card">
+  <header class="card-header">
+    <div>
+      <h3>Listă Cumpărături: {{ shoppingList.mealPlanName }}</h3>
+      <p class="subtitle">Gramaje agregate și scalate automat</p>
+    </div>
+    <div class="total-badge">
+      <span>Cost Estimat:</span>
+      <strong>{{ shoppingList.estimatedTotalCost ? shoppingList.estimatedTotalCost.toFixed(2) + ' RON' : 'Nespecificat' }}</strong>
+    </div>
+  </header>
+
+  <table class="shopping-table">
+    <thead>
+      <tr>
+        <th>Ingredient</th>
+        <th>Cantitate Necesară</th>
+        <th>Cost Estimat</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (item of shoppingList.items; track item.foodItemId) {
+        <tr>
+          <td><strong>{{ item.foodName }}</strong></td>
+          <td>{{ item.totalQuantityGrams }} g</td>
+          <td>{{ item.estimatedItemCost !== null ? item.estimatedItemCost.toFixed(2) + ' RON' : 'Fără istoric' }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</article>
