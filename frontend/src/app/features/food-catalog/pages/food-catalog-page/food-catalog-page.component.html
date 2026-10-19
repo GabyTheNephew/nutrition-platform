@@ -1,16 +1,22 @@
-<div class="catalog-container">
+<section class="catalog-container">
   <div class="catalog-header">
     <h2>Catalog Alimente</h2>
     <p>Valori nutriționale exprimate per 100g de produs</p>
   </div>
 
-  <div class="food-grid">
-    @for (food of foods(); track food.id) {
-      <app-food-card [food]="food"></app-food-card>
-    } @empty {
-      <div class="empty-state">
-        <p>Nu există alimente în baza de date sau conexiunea la server este în curs...</p>
-      </div>
-    }
-  </div>
-</div>
+  @if (isLoading()) {
+    <p class="status-msg">Se încarcă alimentele...</p>
+  } @else if (errorMessage()) {
+    <p class="status-msg error">{{ errorMessage() }}</p>
+  } @else {
+    <div class="food-grid">
+      @for (food of foods(); track food.id) {
+        <app-food-card [food]="food"></app-food-card>
+      } @empty {
+        <div class="empty-state">
+          <p>Nu există alimente în baza de date.</p>
+        </div>
+      }
+    </div>
+  }
+</section>
