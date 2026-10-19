@@ -1,0 +1,93 @@
+<section class="planner-container">
+    <div class="planner-header">
+        <h2>Planificator Săptămânal &amp; Cumpărături</h2>
+        <p>Selectează rețetele dorite pentru săptămână și generează lista agregată de ingrediente</p>
+    </div>
+
+    @if (errorMessage()) {
+    <p class="error-banner">{{ errorMessage() }}</p>
+    }
+
+    <div class="planner-layout">
+        <!-- Secțiunea 1: Formular Plan Nou (Smart) -->
+        <div class="form-card">
+            <h3>Creează Plan Săptămânal</h3>
+            <form [formGroup]="planForm" (ngSubmit)="onSubmitPlan()">
+                <div class="form-group">
+                    <label for="name">Nume Plan</label>
+                    <input id="name" type="text" formControlName="name" placeholder="Ex: Săptămâna 1 - Octombrie" />
+                </div>
+
+                <div class="date-row">
+                    <div class="form-group">
+                        <label for="startDate">Data început</label>
+                        <input id="startDate" type="date" formControlName="startDate" />
+                    </div>
+                    <div class="form-group">
+                        <label for="endDate">Data sfârșit</label>
+                        <input id="endDate" type="date" formControlName="endDate" />
+                    </div>
+                </div>
+
+                <fieldset class="items-section">
+                    <legend>Mese Planificate</legend>
+                    <div formArrayName="items">
+                        @for (control of items.controls; track $index) {
+                        <div [formGroupName]="$index" class="meal-item-row">
+                            <select formControlName="recipeId" class="recipe-select">
+                                <option value="" disabled>Alege rețeta...</option>
+                                @for (recipe of availableRecipes(); track recipe.id) {
+                                <option [value]="recipe.id">{{ recipe.name }} ({{ recipe.servings }} porții de bază)
+                                </option>
+                                }
+                            </select>
+
+                            <select formControlName="mealType" class="type-select">
+                                <option value="BREAKFAST">Mic Dejun</option>
+                                <option value="LUNCH">Prânz</option>
+                                <option value="DINNER">Cină</option>
+                                <option value="SNACK">Gustare</option>
+                            </select>
+
+                            <div class="servings-input">
+                                <input type="number" formControlName="plannedServings" min="1" title="Porții dorite" />
+                                <span>porții</span>
+                            </div>
+
+                            <button type="button" class="btn-remove" (click)="removeItem($index)"
+                                [disabled]="items.length === 1">
+                                ✕
+                            </button>
+                        </div>
+                        }
+                    </div>
+
+                    <button type="button" class="btn-add-item" (click)="addItem()">+ Adaugă Masă</button>
+                </fieldset>
+
+                <button type="submit" class="btn-submit" [disabled]="planForm.invalid || isSubmitting()">
+                    {{ isSubmitting() ? 'Se salvează planul...' : 'Salvează Planul' }}
+                </button>
+            </form>
+        </div>
+
+        <!-- Secțiunea 2: Componentele Dumb de prezentare -->
+        <div class="results-column">
+            @if (currentShoppingList(); as list) {
+            <app-shopping-list [shoppingList]="list"></app-shopping-list>
+            } @else {
+            <div class="placeholder-card">
+                <p>Completează formularul sau selectează un plan anterior pentru a genera lista de cumpărături.</p>
+            </div>
+            }
+
+            @if (savedPlans().length > 0) {
+        <app-saved-plans-list 
+          [plans]="savedPlans()" 
+          (viewShoppingList)="onViewShoppingList($event)"
+          (deletePlan)="onDeletePlan($event)">
+        </app-saved-plans-list>
+      }
+        </div>
+    </div>
+</section>
