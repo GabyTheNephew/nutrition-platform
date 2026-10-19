@@ -1,24 +1,27 @@
 <section class="recipes-container">
-  <div class="page-header">
-    <div>
-      <h2>Rețete Meal Prep</h2>
-      <p>Rețete salvate cu macronutrienți calculați automat</p>
-    </div>
-  </div>
-
-  @if (isLoading()) {
-    <p class="status-msg">Se încarcă rețetele...</p>
-  } @else if (errorMessage()) {
-    <p class="status-msg error">{{ errorMessage() }}</p>
-  } @else {
-    <div class="recipes-grid">
-      @for (recipe of recipes(); track recipe.id) {
-        <app-recipe-card [recipe]="recipe"></app-recipe-card>
-      } @empty {
-        <div class="empty-state">
-          <p>Nu există nicio rețetă salvată.</p>
+    <div class="page-header">
+        <div>
+            <h2>Rețete Meal Prep</h2>
+            <p>Rețete salvate cu macronutrienți calculați automat</p>
         </div>
-      }
+        <a routerLink="/recipes/new" class="btn-primary">
+            + Rețetă Nouă
+        </a>
     </div>
-  }
+
+    @if (isLoading()) {
+    <p class="status-msg">Se încarcă rețetele...</p>
+    } @else if (errorMessage()) {
+    <p class="status-msg error">{{ errorMessage() }}</p>
+    } @else {
+    <div class="recipes-grid">
+        @for (recipe of recipes(); track recipe.id) {
+        <app-recipe-card [recipe]="recipe"></app-recipe-card>
+        } @empty {
+        <div class="empty-state">
+            <p>Nu există nicio rețetă salvată.</p>
+        </div>
+        }
+    </div>
+    }
 </section>

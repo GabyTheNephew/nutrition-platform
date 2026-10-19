@@ -1,0 +1,56 @@
+<section class="form-container">
+  <h2>Creează o rețetă nouă</h2>
+
+  @if (errorMessage()) {
+    <p class="error-banner">{{ errorMessage() }}</p>
+  }
+
+  <form [formGroup]="recipeForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="name">Nume Rețetă</label>
+      <input id="name" type="text" formControlName="name" placeholder="Ex: Pui cu orez la tigaie" />
+    </div>
+
+    <div class="form-group">
+      <label for="servings">Număr de Porții</label>
+      <input id="servings" type="number" formControlName="servings" min="1" />
+    </div>
+
+    <div class="form-group">
+      <label for="instructions">Instrucțiuni de preparare</label>
+      <textarea id="instructions" rows="4" formControlName="instructions" placeholder="Mod de gătire..."></textarea>
+    </div>
+
+    <fieldset class="ingredients-section">
+      <legend>Ingrediente</legend>
+
+      <div formArrayName="ingredients">
+        @for (control of ingredients.controls; track $index) {
+          <div [formGroupName]="$index" class="ingredient-row">
+            <select formControlName="foodItemId">
+              <option value="" disabled>Selectează alimentul...</option>
+              @for (food of availableFoods(); track food.id) {
+                <option [value]="food.id">{{ food.name }} ({{ food.calories }} kcal/100g)</option>
+              }
+            </select>
+
+            <input type="number" formControlName="quantityGrams" placeholder="Grame" min="1" />
+
+            <button type="button" class="btn-remove" (click)="removeIngredient($index)" [disabled]="ingredients.length === 1">
+              Șterge
+            </button>
+          </div>
+        }
+      </div>
+
+      <button type="button" class="btn-add" (click)="addIngredient()">+ Adaugă Ingredient</button>
+    </fieldset>
+
+    <div class="form-actions">
+      <a routerLink="/recipes" class="btn-cancel">Anulează</a>
+      <button type="submit" [disabled]="recipeForm.invalid || isSubmitting()" class="btn-submit">
+        {{ isSubmitting() ? 'Se calculează și se salvează...' : 'Salvează Rețeta' }}
+      </button>
+    </div>
+  </form>
+</section>
