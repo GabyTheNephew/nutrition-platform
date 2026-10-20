@@ -3,6 +3,7 @@ import { FoodApiService } from '../../services/food-api.service';
 import { FoodItem } from '../../models/food.model';
 import { FoodCardComponent } from '../../components/food-card/food-card.component';
 import { CommonModule } from '@angular/common';
+import { extractErrorMessage } from '../../../../core/utils/error.util';
 
 @Component({
   standalone: true,
@@ -25,9 +26,9 @@ export class FoodCatalogPageComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: (err) => {
-        this.errorMessage.set('Nu am putut încărca catalogul de alimente.');
         this.isLoading.set(false);
-        console.error(err);
+        console.error('Eroare la preluarea alimentelor:', err);
+        this.errorMessage.set(extractErrorMessage(err, 'Nu s-au putut încărca alimentele din catalog.'));
       }
     });
   }

@@ -6,6 +6,7 @@ import { RecipeApiService } from '../../services/recipe-api.service';
 import { FoodApiService } from '../../../food-catalog/services/food-api.service';
 import { FoodItem } from '../../../food-catalog/models/food.model';
 import { RecipeCreate } from '../../models/recipe.model';
+import { extractErrorMessage } from '../../../../core/utils/error.util';
 
 @Component({
   selector: 'app-recipe-form',
@@ -41,7 +42,10 @@ export class RecipeFormComponent implements OnInit {
         this.availableFoods.set(foods);
         this.addIngredient();
       },
-      error: () => this.errorMessage.set('Nu s-au putut încărca alimentele pentru dropdown.')
+      error: (err) => {
+        console.error('Eroare la încărcarea alimentelor:', err);
+        this.errorMessage.set(extractErrorMessage(err, 'Nu s-au putut încărca alimentele pentru dropdown.'));
+      }
     });
   }
 
@@ -75,7 +79,8 @@ export class RecipeFormComponent implements OnInit {
       },
       error: (err) => {
         this.isSubmitting.set(false);
-        this.errorMessage.set(err.error?.message || 'Eroare la salvarea rețetei.');
+        console.error('Eroare la crearea rețetei:', err);
+        this.errorMessage.set(extractErrorMessage(err, 'Nu s-a putut salva rețeta.'));
       }
     });
   }
