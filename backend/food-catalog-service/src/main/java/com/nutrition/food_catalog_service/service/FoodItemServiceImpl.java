@@ -87,4 +87,15 @@ public class FoodItemServiceImpl implements IFoodItemService {
         }
         foodItemRepository.deleteById(id);
     }
+
+    @Override
+    public List<FoodItemDTO> searchFoodItemsByName(String query) {
+        if (query == null || query.trim().isEmpty()) {
+            return getAllFoodItems();
+        }
+        return foodItemRepository.findByNameContainingIgnoreCase(query.trim())
+                .stream()
+                .map(foodItemMapper::toDTO)
+                .toList();
+    }
 }
