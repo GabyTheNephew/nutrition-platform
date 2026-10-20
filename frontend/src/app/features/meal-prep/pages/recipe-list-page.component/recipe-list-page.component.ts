@@ -4,6 +4,7 @@ import { RecipeApiService } from '../../services/recipe-api.service';
 import { Recipe } from '../../models/recipe.model';
 import { RecipeCardComponent } from '../../components/recipe-card.component/recipe-card.component';
 import { RouterLink } from '@angular/router';
+import { extractErrorMessage } from '../../../../core/utils/error.util';
 
 @Component({
   selector: 'app-recipe-list-page',
@@ -26,9 +27,9 @@ export class RecipeListPageComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: (err) => {
-        this.errorMessage.set('Nu am putut încărca rețetele de la server.');
         this.isLoading.set(false);
-        console.error(err);
+        console.error('Eroare la încărcarea rețetelor:', err);
+        this.errorMessage.set(extractErrorMessage(err, 'Nu am putut încărca rețetele de la server.'));
       }
     });
   }

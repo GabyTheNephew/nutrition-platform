@@ -7,14 +7,15 @@ import { Recipe } from '../../models/recipe.model';
 import { MealPlan, MealPlanCreate, ShoppingListResponse } from '../../models/meal-plan.model';
 import { ShoppingListComponent } from '../../components/shopping-list.component/shopping-list.component';
 import { SavedPlansListComponent } from '../../components/saved-plans-list.component/saved-plans-list.component';
+import { extractErrorMessage } from '../../../../core/utils/error.util';
 
 @Component({
   selector: 'app-meal-planner-page',
   standalone: true,
   imports: [
-    CommonModule, 
-    ReactiveFormsModule, 
-    ShoppingListComponent, 
+    CommonModule,
+    ReactiveFormsModule,
+    ShoppingListComponent,
     SavedPlansListComponent
   ],
   templateUrl: './meal-planner-page.component.html',
@@ -50,13 +51,17 @@ export class MealPlannerPageComponent implements OnInit {
 
   loadInitialData(): void {
     this.isLoading.set(true);
+    this.errorMessage.set('');
 
     this.recipeApi.getAllRecipes().subscribe({
       next: (recipes) => {
         this.availableRecipes.set(recipes);
         this.addItem();
       },
-      error: () => this.errorMessage.set('Nu s-au putut încărca rețetele.')
+      error: (err) => {
+        this.errorMessage.set('Nu s-au putut încărca rețetele.');
+        this.errorMessage.set(extractErrorMessage(err, 'Nu s-au putut încărca rețetele pentru dropdown.'));
+      }
     });
 
     this.mealPlanApi.getAllMealPlans().subscribe({
@@ -64,8 +69,10 @@ export class MealPlannerPageComponent implements OnInit {
         this.savedPlans.set(plans);
         this.isLoading.set(false);
       },
-      error: () => {
+      error: (err) => {
         this.isLoading.set(false);
+        this.errorMessage.set(extractErrorMessage(err, 'Nu s-au putut încărca planurile săptămânale existente.'));
+        console.error('Eroare la încărcarea planurilor:', err);
       }
     });
   }
@@ -112,18 +119,22 @@ export class MealPlannerPageComponent implements OnInit {
       },
       error: (err) => {
         this.isSubmitting.set(false);
-        this.errorMessage.set(err.error?.message || 'Eroare la crearea planului săptămânal.');
+        console.error('Eroare la crearea planului:', err);
+        this.errorMessage.set(extractErrorMessage(err, 'Eroare la crearea planului săptămânal.'));
       }
     });
   }
 
   onViewShoppingList(planId: string): void {
+    this.errorMessage.set('');
+
     this.mealPlanApi.getShoppingList(planId).subscribe({
       next: (list) => {
         this.currentShoppingList.set(list);
       },
       error: (err) => {
-        this.errorMessage.set(err.error?.message || 'Nu s-a putut genera lista de cumpărături.');
+        console.error('Eroare la generarea listei de cumpărături:', err);
+        this.errorMessage.set(extractErrorMessage(err, 'Nu s-a putut genera lista de cumpărături.'));
       }
     });
   }
@@ -133,6 +144,8 @@ export class MealPlannerPageComponent implements OnInit {
       return;
     }
 
+    this.errorMessage.set('');
+
     this.mealPlanApi.deleteMealPlan(planId).subscribe({
       next: () => {
         this.savedPlans.update(plans => plans.filter(p => p.id !== planId));
@@ -141,7 +154,8 @@ export class MealPlannerPageComponent implements OnInit {
         }
       },
       error: (err) => {
-        this.errorMessage.set(err.error?.message || 'Nu s-a putut șterge planul săptămânal.');
+        console.error('Eroare la ștergerea planului:', err);
+        this.errorMessage.set(extractErrorMessage(err, 'Nu s-a putut șterge planul săptămânal.'));
       }
     });
   }
