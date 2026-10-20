@@ -54,4 +54,9 @@ public class FoodItemController {
         foodItemService.deleteFoodItem(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<FoodItemDTO>> searchFoods(@RequestParam("query") String query) {
+        return ResponseEntity.ok(foodItemService.searchFoodItemsByName(query));
+    }
 }

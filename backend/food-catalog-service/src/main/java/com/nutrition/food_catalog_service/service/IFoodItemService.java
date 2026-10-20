@@ -15,4 +15,5 @@ public interface IFoodItemService {
     List<FoodItemDTO> getFoodItemsByDominantMacro(MacroCategory macroCategory);
     FoodItemDTO updateFoodItem(UUID id, FoodItemUpdateDTO updateDTO);
     void deleteFoodItem(UUID id);
+    List<FoodItemDTO> searchFoodItemsByName(String query);
 }

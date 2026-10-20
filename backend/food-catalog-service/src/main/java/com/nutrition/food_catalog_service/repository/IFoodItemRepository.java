@@ -18,6 +18,8 @@ public interface IFoodItemRepository extends JpaRepository<FoodItem, UUID> {
     // Căutare după nume fără a ține cont de litere mari/mici
     Optional<FoodItem> findByNameIgnoreCase(String name);
 
+    List<FoodItem> findByNameContainingIgnoreCase(String name);
+
     // Verificare existență nume pentru prevenirea duplicatelor
     boolean existsByNameIgnoreCase(String name);
 }
