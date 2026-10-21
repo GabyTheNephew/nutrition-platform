@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Data
@@ -22,7 +23,9 @@ public class MealPlanItemCreateDTO {
     @NotNull(message = "Tipul mesei este obligatoriu.")
     private MealType mealType;
 
-    @NotNull(message = "Numărul de porții planificate este obligatoriu.")
-    @Positive(message = "Trebuie să planifici cel puțin o porție.")
-    private Integer plannedServings;
+    @NotNull(message = "Data mesei este obligatorie.")
+    private LocalDate consumeDate;
+
+    @Builder.Default
+    private Integer servings = 1;
 }
