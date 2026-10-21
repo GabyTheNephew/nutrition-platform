@@ -1,22 +1,51 @@
 <section class="catalog-container">
-  <div class="catalog-header">
-    <h2>Catalog Alimente</h2>
-    <p>Valori nutriționale exprimate per 100g de produs</p>
-  </div>
+  <header class="catalog-header">
+    <div>
+      <h2>Catalog Alimente</h2>
+      <p>Valori nutriționale exprimate per 100g de produs</p>
+    </div>
 
-  @if (isLoading()) {
-    <p class="status-msg">Se încarcă alimentele...</p>
-  } @else if (errorMessage()) {
-    <p class="status-msg error">{{ errorMessage() }}</p>
-  } @else {
-    <div class="food-grid">
-      @for (food of foods(); track food.id) {
-        <app-food-card [food]="food"></app-food-card>
-      } @empty {
-        <div class="empty-state">
-          <p>Nu există alimente în baza de date.</p>
-        </div>
+    <!-- Bara de Căutare -->
+    <div class="search-box">
+      <input #searchInput type="text" placeholder="Caută aliment (ex: pui, ovăz)..." (input)="onSearchInput($event)" />
+      @if (searchQuery()) {
+      <button type="button" class="btn-clear" (click)="clearSearch(searchInput)">✕</button>
       }
     </div>
+  </header>
+
+  <!-- Butoane de Filtrare după Macronutrient Dominant -->
+  <nav class="filters-bar">
+    <button type="button" class="filter-pill" [class.active]="activeFilter() === 'ALL'" (click)="onFilterChange('ALL')">
+      Toate
+    </button>
+    <button type="button" class="filter-pill protein" [class.active]="activeFilter() === 'PROTEIN'"
+      (click)="onFilterChange('PROTEIN')">
+      Proteine
+    </button>
+    <button type="button" class="filter-pill carbohydrate" [class.active]="activeFilter() === 'CARBOHYDRATE'"
+      (click)="onFilterChange('CARBOHYDRATE')">
+      Carbohidrați
+    </button>
+    <button type="button" class="filter-pill fat" [class.active]="activeFilter() === 'FAT'"
+      (click)="onFilterChange('FAT')">
+      Grăsimi
+    </button>
+  </nav>
+
+  @if (isLoading()) {
+  <p class="status-msg">Se încarcă alimentele...</p>
+  } @else if (errorMessage()) {
+  <p class="status-msg error">{{ errorMessage() }}</p>
+  } @else {
+  <div class="food-grid">
+    @for (food of foods(); track food.id) {
+    <app-food-card [food]="food"></app-food-card>
+    } @empty {
+    <div class="empty-state">
+      <p>Nu a fost găsit niciun aliment care să corespundă criteriilor.</p>
+    </div>
+    }
+  </div>
   }
 </section>
