@@ -1,7 +1,7 @@
 <article class="recipe-card">
   <div class="card-header">
     <h3 class="recipe-title">{{ recipe.name }}</h3>
-    <span class="servings-badge">{{ recipe.servings }} porții</span>
+    <span class="servings-badge">1 porție</span>
   </div>
 
   <div class="macro-summary">
@@ -27,15 +27,15 @@
     <h4>Ingrediente:</h4>
     <ul>
       @for (ing of recipe.ingredients; track ing.id) {
-        <li>
-          <span>{{ ing.foodName }}</span>
-          <strong>{{ ing.quantityGrams }}g</strong>
-        </li>
+      <li>
+        <span>{{ ing.foodName }}</span>
+        <strong>{{ ing.quantityGrams }}g</strong>
+      </li>
       }
     </ul>
   </div>
 
   @if (recipe.instructions) {
-    <p class="instructions">{{ recipe.instructions }}</p>
+  <p class="instructions">{{ recipe.instructions }}</p>
   }
 </article>
