@@ -37,13 +37,19 @@ public class MealPlanService implements IMealPlanService {
                 .build();
 
         for (MealPlanItemCreateDTO itemDto : dto.getItems()) {
+            if (itemDto.getConsumeDate().isBefore(dto.getStartDate()) || itemDto.getConsumeDate().isAfter(dto.getEndDate())) {
+                throw new BusinessException("Data mesei (" + itemDto.getConsumeDate() + ") trebuie să fie între "
+                        + dto.getStartDate() + " și " + dto.getEndDate());
+            }
+
             Recipe recipe = recipeRepository.findById(itemDto.getRecipeId())
                     .orElseThrow(() -> new ResourceNotFoundException("Rețeta nu a fost găsită: " + itemDto.getRecipeId()));
 
             MealPlanItem mealPlanItem = MealPlanItem.builder()
                     .recipe(recipe)
                     .mealType(itemDto.getMealType())
-                    .plannedServings(itemDto.getPlannedServings())
+                    .consumeDate(itemDto.getConsumeDate())
+                    .servings(itemDto.getServings() != null ? itemDto.getServings() : 1)
                     .build();
 
             mealPlan.addItem(mealPlanItem);
@@ -75,32 +81,27 @@ public class MealPlanService implements IMealPlanService {
         MealPlan mealPlan = mealPlanRepository.findById(mealPlanId)
                 .orElseThrow(() -> new ResourceNotFoundException("Planul cu ID-ul " + mealPlanId + " nu a fost găsit."));
 
-        // Folosim direct DTO-ul în Map, fără nicio clasă internă în plus!
         Map<UUID, ShoppingListResponseDTO.ShoppingListItemDTO> aggregatedMap = new HashMap<>();
 
-        // 1. Adunăm gramajele din toate rețetele planului
         for (MealPlanItem planItem : mealPlan.getItems()) {
             Recipe recipe = planItem.getRecipe();
-            double scaleFactor = (double) planItem.getPlannedServings() / recipe.getServings();
+            int servingsAtThisMeal = (planItem.getServings() != null) ? planItem.getServings() : 1;
 
             for (RecipeIngredient ingredient : recipe.getIngredients()) {
                 UUID foodId = ingredient.getFoodItemId();
-                double scaledQuantity = ingredient.getQuantityGrams() * scaleFactor;
+                double scaledQuantity = ingredient.getQuantityGrams() * servingsAtThisMeal;
 
-                // Dacă alimentul nu e încă pe listă, îl inițializăm cu 0 grame
                 aggregatedMap.putIfAbsent(foodId, ShoppingListResponseDTO.ShoppingListItemDTO.builder()
                         .foodItemId(foodId)
                         .foodName(ingredient.getFoodName())
                         .totalQuantityGrams(0.0)
                         .build());
 
-                // Adunăm cantitatea curentă la totalul existent
                 ShoppingListResponseDTO.ShoppingListItemDTO currentItem = aggregatedMap.get(foodId);
                 currentItem.setTotalQuantityGrams(currentItem.getTotalQuantityGrams() + scaledQuantity);
             }
         }
 
-        // 2. Calculăm prețul estimat pentru fiecare aliment adunat
         double totalPlanCost = 0.0;
         for (ShoppingListResponseDTO.ShoppingListItemDTO item : aggregatedMap.values()) {
             Optional<GroceryPriceHistory> lastPriceOpt = priceHistoryRepository

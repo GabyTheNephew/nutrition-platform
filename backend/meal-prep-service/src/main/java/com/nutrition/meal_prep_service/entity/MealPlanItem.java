@@ -4,6 +4,7 @@ import com.nutrition.meal_prep_service.enums.MealType;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
@@ -31,6 +32,10 @@ public class MealPlanItem {
     @Column(name = "meal_type", nullable = false)
     private MealType mealType;
 
-    @Column(name = "planned_servings", nullable = false)
-    private Integer plannedServings; // Câte porții din această rețetă vrei să gătești în săptămâna respectivă
+    @Column(name = "consume_date", nullable = false)
+    private LocalDate consumeDate; // Data exactă în care este planificată masa
+
+    @Column(name = "servings", nullable = false)
+    @Builder.Default
+    private Integer servings = 1; // Câte porții mănânci la acea masă (implicit 1)
 }

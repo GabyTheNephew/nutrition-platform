@@ -2,7 +2,7 @@
   <h2>Creează o rețetă nouă</h2>
 
   @if (errorMessage()) {
-    <p class="error-banner">{{ errorMessage() }}</p>
+  <p class="error-banner">{{ errorMessage() }}</p>
   }
 
   <form [formGroup]="recipeForm" (ngSubmit)="onSubmit()">
@@ -11,11 +11,9 @@
       <input id="name" type="text" formControlName="name" placeholder="Ex: Pui cu orez la tigaie" />
     </div>
 
-    <div class="form-group">
-      <label for="servings">Număr de Porții</label>
-      <input id="servings" type="number" formControlName="servings" min="1" />
-    </div>
-
+    <p class="form-hint">
+      * Toate ingredientele și cantitățile trebuie introduse pentru <strong>o singură porție</strong>.
+    </p>
     <div class="form-group">
       <label for="instructions">Instrucțiuni de preparare</label>
       <textarea id="instructions" rows="4" formControlName="instructions" placeholder="Mod de gătire..."></textarea>
@@ -26,20 +24,21 @@
 
       <div formArrayName="ingredients">
         @for (control of ingredients.controls; track $index) {
-          <div [formGroupName]="$index" class="ingredient-row">
-            <select formControlName="foodItemId">
-              <option value="" disabled>Selectează alimentul...</option>
-              @for (food of availableFoods(); track food.id) {
-                <option [value]="food.id">{{ food.name }} ({{ food.calories }} kcal/100g)</option>
-              }
-            </select>
+        <div [formGroupName]="$index" class="ingredient-row">
+          <select formControlName="foodItemId">
+            <option value="" disabled>Selectează alimentul...</option>
+            @for (food of availableFoods(); track food.id) {
+            <option [value]="food.id">{{ food.name }} ({{ food.calories }} kcal/100g)</option>
+            }
+          </select>
 
-            <input type="number" formControlName="quantityGrams" placeholder="Grame" min="1" />
+          <input type="number" formControlName="quantityGrams" placeholder="Grame" min="1" />
 
-            <button type="button" class="btn-remove" (click)="removeIngredient($index)" [disabled]="ingredients.length === 1">
-              Șterge
-            </button>
-          </div>
+          <button type="button" class="btn-remove" (click)="removeIngredient($index)"
+            [disabled]="ingredients.length === 1">
+            Șterge
+          </button>
+        </div>
         }
       </div>
 

@@ -31,7 +31,8 @@ public class MealPlanMapper {
                 .recipeId(item.getRecipe().getId())
                 .recipeName(item.getRecipe().getName())
                 .mealType(item.getMealType())
-                .plannedServings(item.getPlannedServings())
+                .consumeDate(item.getConsumeDate())
+                .servings(item.getServings())
                 .build();
     }
 }

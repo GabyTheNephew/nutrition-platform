@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Data
@@ -17,5 +18,6 @@ public class MealPlanItemDTO {
     private UUID recipeId;
     private String recipeName;
     private MealType mealType;
-    private Integer plannedServings;
+    private LocalDate consumeDate;
+    private Integer servings;
 }

@@ -27,7 +27,8 @@ public class Recipe {
     private String instructions;
 
     @Column(nullable = false)
-    private Integer servings; // Numărul de porții pe care le produce rețeta
+    @Builder.Default
+    private Integer servings = 1; // Numărul de porții pe care le produce rețeta
 
     // Macronutrienții TOTALI ai întregii rețete (calculați automat la salvare)
     @Column(nullable = false)

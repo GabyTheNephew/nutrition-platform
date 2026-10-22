@@ -3,7 +3,8 @@ export type MealType = 'BREAKFAST' | 'LUNCH' | 'DINNER' | 'SNACK';
 export interface MealPlanItemCreate {
   recipeId: string;
   mealType: MealType;
-  plannedServings: number;
+  consumeDate: string; // Format ISO: YYYY-MM-DD
+  servings: number;
 }
 
 export interface MealPlanCreate {
@@ -18,7 +19,8 @@ export interface MealPlanItem {
   recipeId: string;
   recipeName: string;
   mealType: MealType;
-  plannedServings: number;
+  consumeDate: string;
+  servings: number;
 }
 
 export interface MealPlan {
