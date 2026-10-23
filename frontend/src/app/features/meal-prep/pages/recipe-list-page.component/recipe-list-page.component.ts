@@ -21,6 +21,10 @@ export class RecipeListPageComponent implements OnInit {
   errorMessage = signal<string>('');
 
   ngOnInit(): void {
+    if (this.recipes.length === 0) {
+      this.isLoading.set(true);
+    }
+
     this.recipeService.getAllRecipes().subscribe({
       next: (data) => {
         this.recipes.set(data);
