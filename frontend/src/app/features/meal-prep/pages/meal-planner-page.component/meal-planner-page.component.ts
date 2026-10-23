@@ -1,19 +1,15 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { MealPlanApiService } from '../../services/meal-plan-api.service';
 import { RecipeApiService } from '../../services/recipe-api.service';
 import { Recipe } from '../../models/recipe.model';
 import { MealPlan, MealPlanCreate, MealPlanItemCreate, MealType, ShoppingListResponse } from '../../models/meal-plan.model';
 import { ShoppingListComponent } from '../../components/shopping-list.component/shopping-list.component';
 import { SavedPlansListComponent } from '../../components/saved-plans-list.component/saved-plans-list.component';
+import { WeekDayPickerComponent } from '../../components/week-day-picker.component/week-day-picker.component';
+import { DailyMenuConfigComponent, MealChangeEvent } from '../../components/daily-menu-config.component/daily-menu-config.component'; // <-- Import nou
 import { extractErrorMessage } from '../../../../core/utils/error.util';
-
-export interface DayCard {
-  date: string;        // YYYY-MM-DD
-  dayName: string;     // Luni, Marți etc.
-  displayDate: string; // 21 Oct
-}
 
 @Component({
   selector: 'app-meal-planner-page',
@@ -21,9 +17,10 @@ export interface DayCard {
   imports: [
     CommonModule,
     FormsModule,
-    ReactiveFormsModule,
     ShoppingListComponent,
-    SavedPlansListComponent
+    SavedPlansListComponent,
+    WeekDayPickerComponent,
+    DailyMenuConfigComponent
   ],
   templateUrl: './meal-planner-page.component.html',
   styleUrl: './meal-planner-page.component.scss'
@@ -49,26 +46,7 @@ export class MealPlannerPageComponent implements OnInit {
     SNACK: ''
   });
 
-  weekStartMonday = signal<Date>(this.getMondayOfCurrentWeek());
   selectedDates = signal<string[]>([]);
-
-  currentWeekDays = computed<DayCard[]>(() => {
-    const monday = this.weekStartMonday();
-    const days: DayCard[] = [];
-    const dayNames = ['Duminică', 'Luni', 'Marți', 'Miercuri', 'Joi', 'Vineri', 'Sâmbătă'];
-
-    for (let i = 0; i < 7; i++) {
-      const current = new Date(monday);
-      current.setDate(monday.getDate() + i);
-
-      const isoDate = current.toISOString().split('T')[0];
-      const dayName = dayNames[current.getDay()];
-      const displayDate = `${current.getDate()} ${current.toLocaleString('ro-RO', { month: 'short' })}`;
-
-      days.push({ date: isoDate, dayName, displayDate });
-    }
-    return days;
-  });
 
   totalMealsCount = computed<number>(() => {
     const mealsChosen = Object.values(this.selectedMeals()).filter(id => !!id).length;
@@ -78,16 +56,6 @@ export class MealPlannerPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadInitialData();
-    this.selectWorkdays();
-  }
-
-  private getMondayOfCurrentWeek(): Date {
-    const today = new Date();
-    const day = today.getDay();
-    const diff = today.getDate() - day + (day === 0 ? -6 : 1);
-    const monday = new Date(today.setDate(diff));
-    monday.setHours(0, 0, 0, 0);
-    return monday;
   }
 
   loadInitialData(): void {
@@ -110,53 +78,15 @@ export class MealPlannerPageComponent implements OnInit {
     });
   }
 
-  onMealChange(type: MealType, event: Event): void {
-    const recipeId = (event.target as HTMLSelectElement).value;
+  onMealChange(event: MealChangeEvent): void {
     this.selectedMeals.update(current => ({
       ...current,
-      [type]: recipeId
+      [event.type]: event.recipeId
     }));
   }
 
-  previousWeek(): void {
-    const current = new Date(this.weekStartMonday());
-    current.setDate(current.getDate() - 7);
-    this.weekStartMonday.set(current);
-  }
-
-  nextWeek(): void {
-    const current = new Date(this.weekStartMonday());
-    current.setDate(current.getDate() + 7);
-    this.weekStartMonday.set(current);
-  }
-
-  toggleDate(date: string): void {
-    this.selectedDates.update(dates => {
-      if (dates.includes(date)) {
-        return dates.filter(d => d !== date);
-      } else {
-        return [...dates, date];
-      }
-    });
-  }
-
-  isDateSelected(date: string): boolean {
-    return this.selectedDates().includes(date);
-  }
-
-  selectWorkdays(): void {
-    const days = this.currentWeekDays();
-    const workdays = days.slice(0, 5).map(d => d.date); // Luni până Vineri
-    this.selectedDates.set(workdays);
-  }
-
-  selectAllWeek(): void {
-    const days = this.currentWeekDays();
-    this.selectedDates.set(days.map(d => d.date));
-  }
-
-  clearDates(): void {
-    this.selectedDates.set([]);
+  onDatesChange(dates: string[]): void {
+    this.selectedDates.set(dates);
   }
 
   onSubmitPlan(): void {

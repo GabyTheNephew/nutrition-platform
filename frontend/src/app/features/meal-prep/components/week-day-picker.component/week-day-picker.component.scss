@@ -1,0 +1,151 @@
+.step-section {
+    margin-bottom: 2rem;
+    padding-bottom: 1.75rem;
+    border-bottom: 1px solid #f1f5f9;
+
+    .step-title {
+        display: block;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 0.35rem;
+    }
+}
+
+.step-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+
+    .week-nav {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        .week-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #475569;
+        }
+
+        .btn-nav {
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 0.25rem 0.6rem;
+            cursor: pointer;
+            font-size: 0.8rem;
+
+            &:hover:not(:disabled) {
+                background: #e2e8f0;
+            }
+
+            &:disabled {
+                opacity: 0.35;
+                cursor: not-allowed;
+                background: #f8fafc;
+                border-color: #e2e8f0;
+            }
+        }
+    }
+}
+
+.quick-shortcuts {
+    display: flex;
+    gap: 0.6rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+
+    .btn-chip {
+        background: #eff6ff;
+        color: #2563eb;
+        border: 1px solid #bfdbfe;
+        padding: 0.4rem 0.8rem;
+        border-radius: 9999px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.15s;
+
+        &:hover {
+            background: #dbeafe;
+        }
+
+        &.btn-chip-secondary {
+            background: #f1f5f9;
+            color: #64748b;
+            border-color: #cbd5e1;
+
+            &:hover {
+                background: #e2e8f0;
+            }
+        }
+    }
+}
+
+.days-selector-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(85px, 1fr));
+    gap: 0.6rem;
+
+    .day-pill {
+        background: #f8fafc;
+        border: 2px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 0.85rem 0.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.25rem;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+
+        .pill-name {
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #334155;
+        }
+
+        .pill-date {
+            font-size: 0.75rem;
+            color: #64748b;
+        }
+
+        .pill-check {
+            margin-top: 0.25rem;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #94a3b8;
+        }
+
+        &:hover:not(:disabled) {
+            border-color: #93c5fd;
+            background: #f0f7ff;
+        }
+
+        &.active {
+            background: #2563eb;
+            border-color: #1d4ed8;
+
+            .pill-name,
+            .pill-date,
+            .pill-check {
+                color: #ffffff;
+            }
+        }
+
+        &.disabled {
+            background: #f1f5f9;
+            border-color: #e2e8f0;
+            opacity: 0.5;
+            cursor: not-allowed;
+
+            .pill-name,
+            .pill-date,
+            .pill-check {
+                color: #94a3b8;
+            }
+        }
+    }
+}

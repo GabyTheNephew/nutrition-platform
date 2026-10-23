@@ -1,0 +1,46 @@
+<div class="step-section">
+    <span class="step-title">2. Meniul Zilei (Ce pregătești?)</span>
+    <p class="step-desc">Alege rețeta pentru fiecare masă dorită. Fiecare alegere reprezintă 1 porție.</p>
+
+    <div class="meals-grid">
+        <div class="meal-slot-card">
+            <div class="meal-badge breakfast">🌅 Mic Dejun</div>
+            <select [value]="selectedMeals['BREAKFAST']" (change)="onSelectChange('BREAKFAST', $event)">
+                <option value="">— Nu pregătesc —</option>
+                @for (recipe of recipes; track recipe.id) {
+                <option [value]="recipe.id">{{ recipe.name }}</option>
+                }
+            </select>
+        </div>
+
+        <div class="meal-slot-card">
+            <div class="meal-badge lunch">☀️ Prânz</div>
+            <select [value]="selectedMeals['LUNCH']" (change)="onSelectChange('LUNCH', $event)">
+                <option value="">— Nu pregătesc —</option>
+                @for (recipe of recipes; track recipe.id) {
+                <option [value]="recipe.id">{{ recipe.name }}</option>
+                }
+            </select>
+        </div>
+
+        <div class="meal-slot-card">
+            <div class="meal-badge dinner">🌙 Cină</div>
+            <select [value]="selectedMeals['DINNER']" (change)="onSelectChange('DINNER', $event)">
+                <option value="">— Nu pregătesc —</option>
+                @for (recipe of recipes; track recipe.id) {
+                <option [value]="recipe.id">{{ recipe.name }}</option>
+                }
+            </select>
+        </div>
+
+        <div class="meal-slot-card">
+            <div class="meal-badge snack">🍎 Gustare (Snack)</div>
+            <select [value]="selectedMeals['SNACK']" (change)="onSelectChange('SNACK', $event)">
+                <option value="">— Nu pregătesc —</option>
+                @for (recipe of recipes; track recipe.id) {
+                <option [value]="recipe.id">{{ recipe.name }}</option>
+                }
+            </select>
+        </div>
+    </div>
+</div>

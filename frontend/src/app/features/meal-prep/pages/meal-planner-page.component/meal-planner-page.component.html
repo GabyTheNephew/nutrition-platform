@@ -11,89 +11,23 @@
             <div class="alert alert-error">{{ errorMessage() }}</div>
             }
 
+            <!-- PASUL 1: Nume Plan -->
             <div class="step-section">
                 <label for="planName" class="step-title">1. Numele Planului</label>
                 <input id="planName" type="text" [ngModel]="planName()" (ngModelChange)="planName.set($event)"
                     placeholder="ex: Meal Prep Birou Luni-Vineri" class="text-input">
             </div>
 
-            <div class="step-section">
-                <span class="step-title">2. Meniul Zilei (Ce pregătești?)</span>
-                <p class="step-desc">Alege rețeta pentru fiecare masă dorită. Fiecare alegere reprezintă 1 porție.</p>
+            <!-- PASUL 2: Dumb Component pentru Meniul Zilei -->
+            <app-daily-menu-config [recipes]="availableRecipes()" [selectedMeals]="selectedMeals()"
+                (mealChange)="onMealChange($event)">
+            </app-daily-menu-config>
 
-                <div class="meals-grid">
-                    <div class="meal-slot-card">
-                        <div class="meal-badge breakfast">🌅 Mic Dejun</div>
-                        <select [value]="selectedMeals()['BREAKFAST']" (change)="onMealChange('BREAKFAST', $event)">
-                            <option value="">— Nu pregătesc —</option>
-                            @for (recipe of availableRecipes(); track recipe.id) {
-                            <option [value]="recipe.id">{{ recipe.name }}</option>
-                            }
-                        </select>
-                    </div>
+            <!-- PASUL 3: Dumb Component pentru Calendar -->
+            <app-week-day-picker [selectedDates]="selectedDates()" (datesChange)="onDatesChange($event)">
+            </app-week-day-picker>
 
-                    <div class="meal-slot-card">
-                        <div class="meal-badge lunch">☀️ Prânz</div>
-                        <select [value]="selectedMeals()['LUNCH']" (change)="onMealChange('LUNCH', $event)">
-                            <option value="">— Nu pregătesc —</option>
-                            @for (recipe of availableRecipes(); track recipe.id) {
-                            <option [value]="recipe.id">{{ recipe.name }}</option>
-                            }
-                        </select>
-                    </div>
-
-                    <div class="meal-slot-card">
-                        <div class="meal-badge dinner">🌙 Cină</div>
-                        <select [value]="selectedMeals()['DINNER']" (change)="onMealChange('DINNER', $event)">
-                            <option value="">— Nu pregătesc —</option>
-                            @for (recipe of availableRecipes(); track recipe.id) {
-                            <option [value]="recipe.id">{{ recipe.name }}</option>
-                            }
-                        </select>
-                    </div>
-
-                    <div class="meal-slot-card">
-                        <div class="meal-badge snack">🍎 Gustare (Snack)</div>
-                        <select [value]="selectedMeals()['SNACK']" (change)="onMealChange('SNACK', $event)">
-                            <option value="">— Nu pregătesc —</option>
-                            @for (recipe of availableRecipes(); track recipe.id) {
-                            <option [value]="recipe.id">{{ recipe.name }}</option>
-                            }
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <div class="step-section">
-                <div class="step-header-row">
-                    <span class="step-title">3. În ce zile mănânci acest meniu?</span>
-                    <div class="week-nav">
-                        <button type="button" class="btn-nav" (click)="previousWeek()"
-                            title="Săptămâna anterioară">◀</button>
-                        <span class="week-label">Săptămâna selectată</span>
-                        <button type="button" class="btn-nav" (click)="nextWeek()" title="Săptămâna viitoare">▶</button>
-                    </div>
-                </div>
-
-                <div class="quick-shortcuts">
-                    <button type="button" class="btn-chip" (click)="selectWorkdays()">Luni – Vineri (5 zile)</button>
-                    <button type="button" class="btn-chip" (click)="selectAllWeek()">Toată săptămâna (7 zile)</button>
-                    <button type="button" class="btn-chip btn-chip-secondary" (click)="clearDates()">Deselectează
-                        tot</button>
-                </div>
-
-                <div class="days-selector-grid">
-                    @for (day of currentWeekDays(); track day.date) {
-                    <button type="button" class="day-pill" [class.active]="isDateSelected(day.date)"
-                        (click)="toggleDate(day.date)">
-                        <span class="pill-name">{{ day.dayName }}</span>
-                        <span class="pill-date">{{ day.displayDate }}</span>
-                        <span class="pill-check">{{ isDateSelected(day.date) ? '✓' : '+' }}</span>
-                    </button>
-                    }
-                </div>
-            </div>
-
+            <!-- Sumar și Buton Salvare -->
             <footer class="planner-footer">
                 <div class="summary-info">
                     Total porții de pregătit: <strong>{{ totalMealsCount() }}</strong>
@@ -105,6 +39,7 @@
             </footer>
         </div>
 
+        <!-- Panoul Dreapta: Rezultate & Istoric Dumb Components -->
         <aside class="sidebar-cards">
             @if (currentShoppingList(); as list) {
             <app-shopping-list [shoppingList]="list"></app-shopping-list>
