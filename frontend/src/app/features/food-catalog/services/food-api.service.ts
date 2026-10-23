@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Observable, concat, of } from 'rxjs';
+import { finalize, shareReplay, tap } from 'rxjs/operators';
 import { FoodItem } from '../models/food.model';
 
 @Injectable({
@@ -13,23 +13,36 @@ export class FoodApiService {
 
   private cachedFoods: FoodItem[] | null = null;
   private lastFetchedTime: number = 0;
-  
-  private readonly STALE_TIME_MS = 60 * 1000;
+  private readonly STALE_TIME_MS = 5 * 60 * 1000;
+
+  private inFlight$: Observable<FoodItem[]> | null = null;
 
   getAllFoods(forceRefresh = false): Observable<FoodItem[]> {
     const now = Date.now();
-    const isDataFresh = this.cachedFoods !== null && (now - this.lastFetchedTime < this.STALE_TIME_MS);
+    const isFresh = this.cachedFoods !== null && (now - this.lastFetchedTime < this.STALE_TIME_MS);
 
-    if (isDataFresh && !forceRefresh) {
+    if (isFresh && !forceRefresh) {
       return of(this.cachedFoods!);
     }
 
-    return this.http.get<FoodItem[]>(this.API_URL).pipe(
-      tap((data) => {
-        this.cachedFoods = data;
-        this.lastFetchedTime = Date.now();
-      })
-    );
+    if (!this.inFlight$) {
+      this.inFlight$ = this.http.get<FoodItem[]>(this.API_URL).pipe(
+        tap((data) => {
+          this.cachedFoods = data;
+          this.lastFetchedTime = Date.now();
+        }),
+        finalize(() => {
+          this.inFlight$ = null;
+        }),
+        shareReplay(1)
+      );
+    }
+
+    if (this.cachedFoods !== null && !forceRefresh) {
+      return concat(of(this.cachedFoods), this.inFlight$);
+    }
+
+    return this.inFlight$;
   }
 
   searchFoods(query: string): Observable<FoodItem[]> {
@@ -44,5 +57,6 @@ export class FoodApiService {
   invalidateCache(): void {
     this.cachedFoods = null;
     this.lastFetchedTime = 0;
+    this.inFlight$ = null;
   }
 }
