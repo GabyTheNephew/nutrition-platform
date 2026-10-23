@@ -158,8 +158,15 @@
             cursor: pointer;
             font-size: 0.8rem;
 
-            &:hover {
+            &:hover:not(:disabled) {
                 background: #e2e8f0;
+            }
+
+            &:disabled {
+                opacity: 0.35;
+                cursor: not-allowed;
+                background: #f8fafc;
+                border-color: #e2e8f0;
             }
         }
     }
@@ -214,6 +221,24 @@
         gap: 0.25rem;
         cursor: pointer;
         transition: all 0.2s ease-in-out;
+
+        &.disabled {
+            background: #f1f5f9;
+            border-color: #e2e8f0;
+            opacity: 0.5;
+            cursor: not-allowed;
+
+            .pill-name,
+            .pill-date,
+            .pill-check {
+                color: #94a3b8;
+            }
+
+            &:hover {
+                background: #f1f5f9;
+                border-color: #e2e8f0;
+            }
+        }
 
         .pill-name {
             font-weight: 700;

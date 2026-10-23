@@ -68,27 +68,40 @@
                 <div class="step-header-row">
                     <span class="step-title">3. În ce zile mănânci acest meniu?</span>
                     <div class="week-nav">
-                        <button type="button" class="btn-nav" (click)="previousWeek()"
-                            title="Săptămâna anterioară">◀</button>
+                        <button type="button" class="btn-nav" [disabled]="!canNavigateToPreviousWeek()"
+                            (click)="previousWeek()" title="Săptămâna anterioară">
+                            ◀
+                        </button>
                         <span class="week-label">Săptămâna selectată</span>
-                        <button type="button" class="btn-nav" (click)="nextWeek()" title="Săptămâna viitoare">▶</button>
+                        <button type="button" class="btn-nav" (click)="nextWeek()" title="Săptămâna viitoare">
+                            ▶
+                        </button>
                     </div>
                 </div>
 
+                <!-- Scurtături rapide -->
                 <div class="quick-shortcuts">
-                    <button type="button" class="btn-chip" (click)="selectWorkdays()">Luni – Vineri (5 zile)</button>
-                    <button type="button" class="btn-chip" (click)="selectAllWeek()">Toată săptămâna (7 zile)</button>
+                    <button type="button" class="btn-chip" (click)="selectWorkdays()">Zile lucrătoare rămase</button>
+                    <button type="button" class="btn-chip" (click)="selectAllWeek()">Toată săptămâna (rămasă)</button>
                     <button type="button" class="btn-chip btn-chip-secondary" (click)="clearDates()">Deselectează
                         tot</button>
                 </div>
 
+                <!-- Pastile mari pentru zile -->
                 <div class="days-selector-grid">
                     @for (day of currentWeekDays(); track day.date) {
                     <button type="button" class="day-pill" [class.active]="isDateSelected(day.date)"
+                        [class.disabled]="isPastDate(day.date)" [disabled]="isPastDate(day.date)"
                         (click)="toggleDate(day.date)">
                         <span class="pill-name">{{ day.dayName }}</span>
                         <span class="pill-date">{{ day.displayDate }}</span>
-                        <span class="pill-check">{{ isDateSelected(day.date) ? '✓' : '+' }}</span>
+                        <span class="pill-check">
+                            @if (isPastDate(day.date)) {
+                            —
+                            } @else {
+                            {{ isDateSelected(day.date) ? '✓' : '+' }}
+                            }
+                        </span>
                     </button>
                     }
                 </div>
