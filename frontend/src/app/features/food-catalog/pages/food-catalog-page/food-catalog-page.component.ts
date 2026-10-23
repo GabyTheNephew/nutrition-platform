@@ -45,7 +45,9 @@ export class FoodCatalogPageComponent implements OnInit {
   }
 
   loadFoods(): void {
-    this.isLoading.set(true);
+    if (this.foods().length === 0) {
+      this.isLoading.set(true);
+    }
     this.errorMessage.set('');
 
     this.getFoodsRequest().subscribe({
