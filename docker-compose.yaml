@@ -1,0 +1,121 @@
+services:
+  # 1. Baza de date
+  postgres-nutrition:
+    image: postgres:16-alpine
+    container_name: postgres-nutrition
+    environment:
+      POSTGRES_DB: ${DB_NAME:-food_catalog_db}
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgrespassword}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-food_catalog_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - nutrition-network
+    restart: unless-stopped
+
+  # 2. Service Discovery (Netflix Eureka)
+  eurekaserver:
+    build:
+      context: ./backend/eurekaserver
+      dockerfile: Dockerfile
+    container_name: eurekaserver
+    ports:
+      - "8761:8761"
+    networks:
+      - nutrition-network
+    restart: unless-stopped
+
+  # 3. Microserviciul Food Catalog
+  food-catalog-service:
+    build:
+      context: ./backend/food-catalog-service
+      dockerfile: Dockerfile
+    container_name: food-catalog-service
+    environment:
+      DB_HOST: postgres-nutrition
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-food_catalog_db}
+      DB_USER: ${DB_USER:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-postgrespassword}
+      EUREKA_URI: http://eurekaserver:8761/eureka/
+    ports:
+      - "8081:8081"
+    depends_on:
+      postgres-nutrition:
+        condition: service_healthy
+      eurekaserver:
+        condition: service_started
+    networks:
+      - nutrition-network
+    restart: unless-stopped
+
+  # 4. Microserviciul Meal Prep
+  meal-prep-service:
+    build:
+      context: ./backend/meal-prep-service
+      dockerfile: Dockerfile
+    container_name: meal-prep-service
+    environment:
+      DB_HOST: postgres-nutrition
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-food_catalog_db}
+      DB_USER: ${DB_USER:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-postgrespassword}
+      EUREKA_URI: http://eurekaserver:8761/eureka/
+    ports:
+      - "8082:8082"
+    depends_on:
+      postgres-nutrition:
+        condition: service_healthy
+      eurekaserver:
+        condition: service_started
+      food-catalog-service:
+        condition: service_started
+    networks:
+      - nutrition-network
+    restart: unless-stopped
+
+  # 5. API Gateway (Netty Reactive Proxy)
+  gatewayserver:
+    build:
+      context: ./backend/gatewayserver
+      dockerfile: Dockerfile
+    container_name: gatewayserver
+    environment:
+      EUREKA_URI: http://eurekaserver:8761/eureka/
+    ports:
+      - "8080:8080"
+    depends_on:
+      eurekaserver:
+        condition: service_started
+    networks:
+      - nutrition-network
+    restart: unless-stopped
+
+  # 6. Interfața Angular (Nginx)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - gatewayserver
+    networks:
+      - nutrition-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  nutrition-network:
+    driver: bridge
