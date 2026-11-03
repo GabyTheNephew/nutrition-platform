@@ -19,5 +19,6 @@
         <module>food-catalog-service</module>
         <module>meal-prep-service</module>
         <module>ai-recipe-service</module>
+        <module>user-service</module>
     </modules>
 </project>
