@@ -1,0 +1,213 @@
+<div class="onboarding-container">
+    <app-medical-disclaimer></app-medical-disclaimer>
+
+    <!-- Indicator pași -->
+    <div class="steps-progress">
+        <div class="step-item" [class.active]="currentStep() >= 1">1. Date Biometrice</div>
+        <div class="step-divider"></div>
+        <div class="step-item" [class.active]="currentStep() >= 2">2. Obiectiv & Activitate</div>
+        <div class="step-divider"></div>
+        <div class="step-item" [class.active]="currentStep() >= 3">3. Sănătate & Alimentație</div>
+        <div class="step-divider"></div>
+        <div class="step-item" [class.active]="currentStep() === 4">4. Sumar Metabolic</div>
+    </div>
+
+    @if (errorMessage()) {
+    <div class="error-banner">{{ errorMessage() }}</div>
+    }
+
+    <!-- PASUL 1: DATE BIOMETRICE -->
+    @if (currentStep() === 1) {
+    <div class="card-step">
+        <h2>Să începem cu elementele de bază</h2>
+        <p class="step-desc">Aceste date permit estimarea precisă a ratei metabolice bazale (formula Mifflin-St Jeor).
+        </p>
+
+        <div class="form-grid">
+            <div class="form-group full-width">
+                <label>Nume sau Pseudonim</label>
+                <input type="text" [(ngModel)]="displayName" placeholder="Ex: Alex" class="input-field" />
+            </div>
+
+            <div class="form-group">
+                <label>Sex Biologic</label>
+                <div class="toggle-group">
+                    <button type="button" class="btn-toggle" [class.active]="gender === 'MALE'"
+                        (click)="gender = 'MALE'">Bărbat</button>
+                    <button type="button" class="btn-toggle" [class.active]="gender === 'FEMALE'"
+                        (click)="gender = 'FEMALE'">Femeie</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Vârstă (ani)</label>
+                <input type="number" [(ngModel)]="age" min="14" max="100" class="input-field" />
+            </div>
+
+            <div class="form-group">
+                <label>Înălțime (cm)</label>
+                <input type="number" [(ngModel)]="heightCm" min="100" max="250" class="input-field" />
+            </div>
+
+            <div class="form-group">
+                <label>Greutate Actuală (kg)</label>
+                <input type="number" [(ngModel)]="weightKg" min="30" max="300" step="0.5" class="input-field" />
+            </div>
+        </div>
+
+        <div class="action-bar right">
+            <button type="button" class="btn btn-primary" (click)="nextStep()">Pasul următor →</button>
+        </div>
+    </div>
+    }
+
+    <!-- PASUL 2: OBIECTIV, RITM & NIVEL ACTIVITATE -->
+    @if (currentStep() === 2) {
+    <div class="card-step">
+        <h2>Care este obiectivul tău principal?</h2>
+        <p class="step-desc">Alege ținta ta fizică și ritmul în care dorești să progresezi.</p>
+
+        <!-- Grilă Obiective -->
+        <label class="section-label">Obiectiv Fitness</label>
+        <div class="selection-grid">
+            @for (key of goalKeys; track key) {
+            <div class="grid-card" [class.selected]="goal === key" (click)="goal = key">
+                <div class="card-title">{{ goalLabels[key].title }}</div>
+                <div class="card-subtitle">{{ goalLabels[key].desc }}</div>
+            </div>
+            }
+        </div>
+
+        <!-- Ritm Obiectiv (Afișat doar la Slăbire sau Masă) -->
+        @if (goal === 'LOSE_WEIGHT' || goal === 'GAIN_MUSCLE') {
+        <label class="section-label">Ritm de progres</label>
+        <div class="selection-grid pace-grid">
+            @for (pace of paceKeys; track pace) {
+            <div class="grid-card pace-card" [class.selected]="goalPace === pace" (click)="goalPace = pace">
+                <div class="card-title">{{ paceLabels[pace].title }}</div>
+                <span class="badge">{{ paceLabels[pace].badge }}</span>
+            </div>
+            }
+        </div>
+        }
+
+        <!-- Grilă Nivel de Activitate -->
+        <label class="section-label">Nivel de Activitate Fizică Zilnică</label>
+        <div class="selection-grid">
+            @for (act of activityKeys; track act) {
+            <div class="grid-card" [class.selected]="activityLevel === act" (click)="activityLevel = act">
+                <div class="card-title">{{ activityLabels[act].title }}</div>
+                <div class="card-subtitle">{{ activityLabels[act].desc }}</div>
+            </div>
+            }
+        </div>
+
+        <div class="action-bar between">
+            <button type="button" class="btn btn-secondary" (click)="prevStep()">← Înapoi</button>
+            <button type="button" class="btn btn-primary" (click)="nextStep()">Pasul următor →</button>
+        </div>
+    </div>
+    }
+
+    <!-- PASUL 3: SĂNĂTATE & RESTRICȚII ALIMENTARE -->
+    @if (currentStep() === 3) {
+    <div class="card-step">
+        <h2>Particularități de Sănătate & Nutriție</h2>
+        <p class="step-desc">Selectează afecțiunile diagnosticate și alergiile tale pentru ca AI-ul să excludă automat
+            ingredientele contraindicate.</p>
+
+        <!-- Condiții Medicale -->
+        <label class="section-label">Afecțiuni Medicale (Selecție multiplă)</label>
+        <div class="chip-grid">
+            @for (cond of conditionKeys; track cond) {
+            <button type="button" class="chip-card" [class.active]="isConditionSelected(cond)"
+                (click)="toggleCondition(cond)">
+                {{ conditionLabels[cond].title }}
+            </button>
+            }
+        </div>
+
+        <!-- Restricții Alimentare -->
+        <label class="section-label">Restricții & Preferințe Alimentare</label>
+        <div class="chip-grid">
+            @for (rest of restrictionKeys; track rest) {
+            <button type="button" class="chip-card" [class.active]="isRestrictionSelected(rest)"
+                (click)="toggleRestriction(rest)">
+                {{ restrictionLabels[rest].title }}
+            </button>
+            }
+        </div>
+
+        <div class="action-bar between">
+            <button type="button" class="btn btn-secondary" (click)="prevStep()">← Înapoi</button>
+            <button type="button" class="btn btn-primary" [disabled]="isLoading()" (click)="submitOnboarding()">
+                @if (isLoading()) { Calculez profilul... } @else { Finalizează & Calculează Profilul }
+            </button>
+        </div>
+    </div>
+    }
+
+    <!-- PASUL 4: SUMAR METABOLIC -->
+    @if (currentStep() === 4 && savedProfile(); as p) {
+    <div class="card-step summary-card">
+        <div class="success-header">
+            <div class="check-circle">✓</div>
+            <h2>Profil Nutrițional Activ</h2>
+            <p>Analiză metabolică pentru <strong>{{ p.displayName }}</strong> ({{ genderLabels[p.gender] }}, {{ p.age }}
+                ani, {{ p.weightKg }} kg):</p>
+        </div>
+
+        <div class="metrics-grid">
+            <div class="metric-box">
+                <span class="metric-label">Indice Masă Corporală (BMI)</span>
+                <span class="metric-value">{{ p.bmi }}</span>
+                <span class="metric-badge" [ngClass]="bmiLabels[p.bmiCategory].colorClass">
+                    {{ bmiLabels[p.bmiCategory].label }}
+                </span>
+            </div>
+
+            <div class="metric-box">
+                <span class="metric-label">Rată Metabolică Bazală (BMR)</span>
+                <span class="metric-value">{{ p.bmr }} <small>kcal</small></span>
+                <span class="metric-sub">Consum în repaus absolut</span>
+            </div>
+
+            <div class="metric-box">
+                <span class="metric-label">Consum Zilnic Total (TDEE)</span>
+                <span class="metric-value">{{ p.tdee }} <small>kcal</small></span>
+                <span class="metric-sub">{{ activityLabels[p.activityLevel].title }}</span>
+            </div>
+
+            <div class="metric-box highlight">
+                <span class="metric-label">Țintă Calorică Recomandată</span>
+                <span class="metric-value">{{ p.targetCalories }} <small>kcal/zi</small></span>
+                <span class="metric-sub">{{ goalLabels[p.goal].title }}</span>
+            </div>
+        </div>
+
+        <h3>Defalcare Macronutrienți Țintă</h3>
+        <div class="macros-grid">
+            <div class="macro-card protein">
+                <span class="macro-name">Proteine</span>
+                <span class="macro-val">{{ p.targetProteinGrams }}g</span>
+                <span class="macro-desc">Protecție musculară</span>
+            </div>
+            <div class="macro-card carbs">
+                <span class="macro-name">Carbohidrați</span>
+                <span class="macro-val">{{ p.targetCarbsGrams }}g</span>
+                <span class="macro-desc">Energie & performanță</span>
+            </div>
+            <div class="macro-card fats">
+                <span class="macro-name">Grăsimi Sănătoase</span>
+                <span class="macro-val">{{ p.targetFatGrams }}g</span>
+                <span class="macro-desc">Echilibru hormonal</span>
+            </div>
+        </div>
+
+        <div class="action-bar between">
+            <button type="button" class="btn btn-secondary" (click)="restartQuiz()">✏️ Reconfigurează Profilul</button>
+            <button type="button" class="btn btn-primary" (click)="finish()">Explorează alimentele & rețetele →</button>
+        </div>
+    </div>
+    }
+</div>

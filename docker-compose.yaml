@@ -82,6 +82,29 @@ services:
       - nutrition-network
     restart: unless-stopped
 
+  user-service:
+    build:
+      context: ./backend/user-service
+      dockerfile: Dockerfile
+    container_name: user-service
+    environment:
+      DB_HOST: postgres-nutrition
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-food_catalog_db}
+      DB_USER: ${DB_USER:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-postgrespassword}
+      EUREKA_URI: http://eurekaserver:8761/eureka/
+    ports:
+      - "8084:8084"
+    depends_on:
+      postgres-nutrition:
+        condition: service_healthy
+      eurekaserver:
+        condition: service_started
+    networks:
+      - nutrition-network
+    restart: unless-stopped
+
   # 5. API Gateway (Netty Reactive Proxy)
   gatewayserver:
     build:

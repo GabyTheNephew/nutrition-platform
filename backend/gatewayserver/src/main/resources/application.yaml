@@ -19,17 +19,23 @@ spring:
               predicates:
                 - Path=/api/foods/**
 
-            # Ruta 2: Meal Prep Service (pregatita pentru pasul urmator)
+            # Ruta 2: Meal Prep Service
             - id: meal-prep-service
               uri: lb://meal-prep-service
               predicates:
                 - Path=/api/recipes/**, /api/meal-plans/**, /api/groceries/**
 
-            # Ruta 3: AI Recipe Service (pregatita pentru viitor)
+            # Ruta 3: AI Recipe Service
             - id: ai-recipe-service
               uri: lb://ai-recipe-service
               predicates:
                 - Path=/api/ai/**
+
+            # Ruta 4: User Profile & Health Service
+            - id: user-service
+              uri: lb://user-service
+              predicates:
+                - Path=/api/user-profile/**
 
 eureka:
   client:
