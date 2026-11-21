@@ -1,0 +1,131 @@
+<section class="ai-generator-container">
+  <header class="page-header">
+    <div>
+      <h2>Generator Rețete AI</h2>
+      <p>Generează variante calibrate automat pe profilul tău activ și ajustează-le prin chat</p>
+    </div>
+  </header>
+
+  @if (errorMessage()) {
+    <p class="banner error">{{ errorMessage() }}</p>
+  }
+
+  @if (successMessage()) {
+    <div class="banner success">
+      <span>{{ successMessage() }}</span>
+      <a routerLink="/recipes" class="link-recipes">Vezi în Rețete →</a>
+    </div>
+  }
+
+  <!-- Zona 1: Panoul de generare -->
+  <div class="controls-card">
+    <div class="meal-type-pills">
+      @for (meal of mealTypes; track meal.value) {
+        <button
+          type="button"
+          class="meal-pill"
+          [class.active]="selectedMealType() === meal.value"
+          (click)="onSelectMealType(meal.value)">
+          {{ meal.label }}
+        </button>
+      }
+    </div>
+
+    <div class="notes-row">
+      <input
+        type="text"
+        [ngModel]="extraNotes()"
+        (ngModelChange)="extraNotes.set($event)"
+        placeholder="Preferințe opționale (ex: rapid în 15 min, bogat în proteine)..."
+      />
+      <button
+        type="button"
+        class="btn-generate"
+        [disabled]="isGenerating()"
+        (click)="onGenerate()">
+        {{ isGenerating() ? 'Se generează rețetele...' : 'Generează Rețete AI' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Zona 2: Rezultate + Chat de rafinare -->
+  @if (isGenerating()) {
+    <div class="loading-box">
+      <p>Asistentul AI calculează variantele din catalogul tău de alimente...</p>
+    </div>
+  } @else if (generatedRecipes().length > 0) {
+    <div class="workspace-layout">
+      <div class="recipes-column">
+        @for (recipe of generatedRecipes(); track $index) {
+          <article
+            class="ai-recipe-card"
+            [class.selected]="selectedIndex() === $index"
+            (click)="onSelectRecipe($index)">
+            <div class="card-top">
+              <div>
+                <span class="variant-badge">Varianta {{ $index + 1 }}</span>
+                <h3>{{ recipe.name }}</h3>
+              </div>
+              <span class="kcal-badge">{{ recipe.estimatedCalories }} kcal</span>
+            </div>
+
+            <div class="macros-bar">
+              <span>Proteine: <strong>{{ recipe.estimatedProtein }}g</strong></span>
+              <span>Carbo: <strong>{{ recipe.estimatedCarbs }}g</strong></span>
+              <span>Grăsimi: <strong>{{ recipe.estimatedFat }}g</strong></span>
+              <span>Porții: <strong>{{ recipe.servings }}</strong></span>
+            </div>
+
+            <div class="ingredients-block">
+              <h4>Ingrediente</h4>
+              <ul>
+                @for (ing of recipe.ingredients; track ing.foodItemId) {
+                  <li>
+                    <span>{{ ing.foodName }}</span>
+                    <strong>{{ ing.quantityGrams }} g</strong>
+                  </li>
+                }
+              </ul>
+            </div>
+
+            <div class="instructions-block">
+              <h4>Mod de preparare</h4>
+              <p>{{ recipe.instructions }}</p>
+            </div>
+
+            <div class="card-actions">
+              <button
+                type="button"
+                class="btn-refine"
+                (click)="$event.stopPropagation(); onSelectRecipe($index)">
+                {{ selectedIndex() === $index ? 'Selectată în Chat' : 'Ajustează în Chat' }}
+              </button>
+              <button
+                type="button"
+                class="btn-save"
+                [disabled]="isSaving()"
+                (click)="$event.stopPropagation(); onSaveRecipe(recipe)">
+                {{ isSaving() ? 'Se salvează...' : 'Salvează Rețeta' }}
+              </button>
+            </div>
+          </article>
+        }
+      </div>
+
+      <aside class="chat-column">
+        @if (selectedRecipe(); as activeRecipe) {
+          <app-ai-recipe-chat
+            [recipeName]="activeRecipe.name"
+            [messages]="chatHistory()"
+            [isSending]="isRefining()"
+            (sendMessage)="onSendChatMessage($event)">
+          </app-ai-recipe-chat>
+        }
+      </aside>
+    </div>
+  } @else {
+    <div class="empty-state">
+      <p>Alege tipul mesei și apasă <strong>Generează Rețete AI</strong> pentru a primi sugestii personalizate.</p>
+    </div>
+  }
+</section>

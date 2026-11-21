@@ -21,5 +21,9 @@ export const routes: Routes = [
   {
     path: 'onboarding',
     loadComponent: () => import('./features/user-profile/pages/onboarding-page.component/onboarding-page.component').then(m => m.OnboardingPageComponent)
+  },
+  {
+    path: 'ai-recipes',
+    loadComponent: () => import('./features/ai-recipe-generator/pages/ai-recipe-generator-page.component/ai-recipe-generator-page.component').then(m => m.AiRecipeGeneratorPageComponent)
   }
 ];
