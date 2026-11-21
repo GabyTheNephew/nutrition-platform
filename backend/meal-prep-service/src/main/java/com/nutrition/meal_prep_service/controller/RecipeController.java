@@ -35,6 +35,13 @@ public class RecipeController {
         return ResponseEntity.ok(recipeService.getRecipeById(id));
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<RecipeDTO> updateRecipe(
+            @PathVariable UUID id,
+            @Valid @RequestBody RecipeCreateDTO dto) {
+        return ResponseEntity.ok(recipeService.updateRecipe(id, dto));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteRecipe(@PathVariable UUID id) {
         recipeService.deleteRecipe(id);

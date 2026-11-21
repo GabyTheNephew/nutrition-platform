@@ -77,6 +77,19 @@ export class RecipeApiService {
     );
   }
 
+  updateRecipe(id: string, recipe: RecipeCreate): Observable<Recipe> {
+    return this.http.put<Recipe>(`${this.API_URL}/${id}`, recipe).pipe(
+      tap((updatedRecipe) => {
+        if (this.cachedRecipes) {
+          this.cachedRecipes = this.cachedRecipes.map((r) =>
+            r.id === id ? updatedRecipe : r
+          );
+          this.lastFetchedTime = Date.now();
+        }
+      })
+    );
+  }
+
   invalidateCache(): void {
     this.cachedRecipes = null;
     this.lastFetchedTime = 0;

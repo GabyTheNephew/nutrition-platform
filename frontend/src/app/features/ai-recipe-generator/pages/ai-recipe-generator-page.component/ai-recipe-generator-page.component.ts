@@ -28,6 +28,9 @@ export class AiRecipeGeneratorPageComponent {
     { value: 'SNACK', label: 'Gustare' }
   ];
 
+  savedRecipeIds = signal<Record<number, string>>({});
+  dirtyIndices = signal<Set<number>>(new Set());
+
   selectedMealType = signal<MealType>('LUNCH');
   extraNotes = signal<string>('');
 
@@ -57,6 +60,8 @@ export class AiRecipeGeneratorPageComponent {
     this.successMessage.set('');
     this.selectedIndex.set(null);
     this.chatHistory.set([]);
+    this.savedRecipeIds.set({});
+    this.dirtyIndices.set(new Set());
 
     this.aiRecipeApi.generateRecipes({
       mealType: this.selectedMealType(),
@@ -115,6 +120,10 @@ export class AiRecipeGeneratorPageComponent {
           this.generatedRecipes.update(list =>
             list.map((item, i) => (i === idx ? res.updatedRecipe : item))
           );
+
+          if (this.savedRecipeIds()[idx]) {
+            this.dirtyIndices.update(set => new Set(set).add(idx));
+          }
         }
         this.isRefining.set(false);
       },
@@ -126,7 +135,7 @@ export class AiRecipeGeneratorPageComponent {
     });
   }
 
-  onSaveRecipe(recipe: GeneratedRecipe): void {
+  onSaveRecipe(recipe: GeneratedRecipe, index: number): void {
     this.isSaving.set(true);
     this.errorMessage.set('');
     this.successMessage.set('');
@@ -141,10 +150,23 @@ export class AiRecipeGeneratorPageComponent {
       }))
     };
 
-    this.recipeApi.createRecipe(payload).subscribe({
-      next: () => {
+    const existingId = this.savedRecipeIds()[index];
+    const request$ = existingId
+      ? this.recipeApi.updateRecipe(existingId, payload)
+      : this.recipeApi.createRecipe(payload);
+
+    request$.subscribe({
+      next: (saved) => {
         this.isSaving.set(false);
-        this.successMessage.set(`Rețeta „${recipe.name}” a fost salvată în Rețete Meal Prep!`);
+        this.savedRecipeIds.update(map => ({ ...map, [index]: saved.id }));
+        this.dirtyIndices.update(set => {
+          const next = new Set(set);
+          next.delete(index);
+          return next;
+        });
+
+        const actionText = existingId ? 'actualizată' : 'salvată';
+        this.successMessage.set(`Rețeta „${recipe.name}” a fost ${actionText} în Rețete Meal Prep!`);
       },
       error: (err) => {
         this.isSaving.set(false);

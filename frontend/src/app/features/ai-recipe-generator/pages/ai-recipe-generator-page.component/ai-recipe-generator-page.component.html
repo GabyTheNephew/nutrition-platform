@@ -103,9 +103,17 @@
               <button
                 type="button"
                 class="btn-save"
-                [disabled]="isSaving()"
-                (click)="$event.stopPropagation(); onSaveRecipe(recipe)">
-                {{ isSaving() ? 'Se salvează...' : 'Salvează Rețeta' }}
+                [disabled]="isSaving() || (!!savedRecipeIds()[$index] && !dirtyIndices().has($index))"
+                (click)="$event.stopPropagation(); onSaveRecipe(recipe, $index)">
+                @if (isSaving()) {
+                  Se salvează...
+                } @else if (savedRecipeIds()[$index] && dirtyIndices().has($index)) {
+                  Actualizează Rețeta
+                } @else if (savedRecipeIds()[$index]) {
+                  Salvată ✓
+                } @else {
+                  Salvează Rețeta
+                }
               </button>
             </div>
           </article>
