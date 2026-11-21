@@ -28,6 +28,48 @@ public class RecipeService implements IRecipeService {
 
     @Override
     @Transactional
+    public RecipeDTO updateRecipe(UUID id, RecipeCreateDTO dto) {
+        Recipe recipe = recipeRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Rețeta cu ID-ul " + id + " nu a fost găsită."));
+
+        if (recipeRepository.existsByNameIgnoreCaseAndIdNot(dto.getName(), id)) {
+            throw new BusinessException("Rețeta cu numele '" + dto.getName() + "' există deja.");
+        }
+
+        recipe.setName(dto.getName());
+        recipe.setInstructions(dto.getInstructions());
+        recipe.setServings(dto.getServings() != null ? dto.getServings() : 1);
+
+        recipe.setTotalCalories(0.0);
+        recipe.setTotalProtein(0.0);
+        recipe.setTotalCarbohydrates(0.0);
+        recipe.setTotalFat(0.0);
+        recipe.getIngredients().clear(); // orphanRemoval = true șterge ingredientele vechi din DB
+
+        for (RecipeIngredientCreateDTO ingDto : dto.getIngredients()) {
+            FoodItemDTO food = foodCatalogClient.getFoodById(ingDto.getFoodItemId());
+            double multiplier = ingDto.getQuantityGrams() / 100.0;
+
+            recipe.setTotalCalories(recipe.getTotalCalories() + (food.getCalories() * multiplier));
+            recipe.setTotalProtein(recipe.getTotalProtein() + (food.getProtein() * multiplier));
+            recipe.setTotalCarbohydrates(recipe.getTotalCarbohydrates() + (food.getCarbohydrates() * multiplier));
+            recipe.setTotalFat(recipe.getTotalFat() + (food.getFat() * multiplier));
+
+            RecipeIngredient ingredient = RecipeIngredient.builder()
+                    .foodItemId(food.getId())
+                    .foodName(food.getName())
+                    .quantityGrams(ingDto.getQuantityGrams())
+                    .build();
+
+            recipe.addIngredient(ingredient);
+        }
+
+        Recipe updated = recipeRepository.save(recipe);
+        return recipeMapper.toDTO(updated);
+    }
+
+    @Override
+    @Transactional
     public RecipeDTO createRecipe(RecipeCreateDTO dto) {
         if (recipeRepository.existsByNameIgnoreCase(dto.getName())) {
             throw new BusinessException("Rețeta cu numele '" + dto.getName() + "' există deja.");

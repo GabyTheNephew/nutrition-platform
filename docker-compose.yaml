@@ -82,6 +82,28 @@ services:
       - nutrition-network
     restart: unless-stopped
 
+  ai-recipe-service:
+    build:
+      context: ./backend/ai-recipe-service
+      dockerfile: Dockerfile
+    container_name: ai-recipe-service
+    environment:
+      EUREKA_URI: http://eurekaserver:8761/eureka/
+      AI_API_KEY: ${AI_API_KEY:-gsk-placeholder}
+      AI_BASE_URL: ${AI_BASE_URL:-https://api.groq.com/openai}
+    ports:
+      - "8083:8083"
+    depends_on:
+      eurekaserver:
+        condition: service_started
+      food-catalog-service:
+        condition: service_started
+      user-service:
+        condition: service_started
+    networks:
+      - nutrition-network
+    restart: unless-stopped
+
   user-service:
     build:
       context: ./backend/user-service

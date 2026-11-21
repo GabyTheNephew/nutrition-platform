@@ -8,6 +8,7 @@ import java.util.UUID;
 
 public interface IRecipeService {
     RecipeDTO createRecipe(RecipeCreateDTO dto);
+    RecipeDTO updateRecipe(UUID id, RecipeCreateDTO dto);
     List<RecipeDTO> getAllRecipes();
     RecipeDTO getRecipeById(UUID id);
     void deleteRecipe(UUID id);
