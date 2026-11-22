@@ -1,5 +1,5 @@
 <section class="form-container">
-  <h2>Creează o rețetă nouă</h2>
+  <h2>Create a New Recipe</h2>
 
   @if (errorMessage()) {
   <p class="error-banner">{{ errorMessage() }}</p>
@@ -7,48 +7,48 @@
 
   <form [formGroup]="recipeForm" (ngSubmit)="onSubmit()">
     <div class="form-group">
-      <label for="name">Nume Rețetă</label>
-      <input id="name" type="text" formControlName="name" placeholder="Ex: Pui cu orez la tigaie" />
+      <label for="name">Recipe Name</label>
+      <input id="name" type="text" formControlName="name" placeholder="e.g., Pan-Seared Chicken and Rice" />
     </div>
 
     <p class="form-hint">
-      * Toate ingredientele și cantitățile trebuie introduse pentru <strong>o singură porție</strong>.
+      * All ingredients and quantities must be entered for <strong>a single serving</strong>.
     </p>
     <div class="form-group">
-      <label for="instructions">Instrucțiuni de preparare</label>
-      <textarea id="instructions" rows="4" formControlName="instructions" placeholder="Mod de gătire..."></textarea>
+      <label for="instructions">Preparation Instructions</label>
+      <textarea id="instructions" rows="4" formControlName="instructions" placeholder="Cooking steps..."></textarea>
     </div>
 
     <fieldset class="ingredients-section">
-      <legend>Ingrediente</legend>
+      <legend>Ingredients</legend>
 
       <div formArrayName="ingredients">
         @for (control of ingredients.controls; track $index) {
         <div [formGroupName]="$index" class="ingredient-row">
           <select formControlName="foodItemId">
-            <option value="" disabled>Selectează alimentul...</option>
+            <option value="" disabled>Select a food item...</option>
             @for (food of availableFoods(); track food.id) {
             <option [value]="food.id">{{ food.name }} ({{ food.calories }} kcal/100g)</option>
             }
           </select>
 
-          <input type="number" formControlName="quantityGrams" placeholder="Grame" min="1" />
+          <input type="number" formControlName="quantityGrams" placeholder="Grams" min="1" />
 
           <button type="button" class="btn-remove" (click)="removeIngredient($index)"
             [disabled]="ingredients.length === 1">
-            Șterge
+            Remove
           </button>
         </div>
         }
       </div>
 
-      <button type="button" class="btn-add" (click)="addIngredient()">+ Adaugă Ingredient</button>
+      <button type="button" class="btn-add" (click)="addIngredient()">+ Add Ingredient</button>
     </fieldset>
 
     <div class="form-actions">
-      <a routerLink="/recipes" class="btn-cancel">Anulează</a>
+      <a routerLink="/recipes" class="btn-cancel">Cancel</a>
       <button type="submit" [disabled]="recipeForm.invalid || isSubmitting()" class="btn-submit">
-        {{ isSubmitting() ? 'Se calculează și se salvează...' : 'Salvează Rețeta' }}
+        {{ isSubmitting() ? 'Calculating and saving...' : 'Save Recipe' }}
       </button>
     </div>
   </form>

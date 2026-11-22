@@ -4,7 +4,7 @@ import { FoodApiService } from '../../services/food-api.service';
 import { FoodItem } from '../../models/food.model';
 import { FoodCardComponent } from '../../components/food-card/food-card.component';
 import { extractErrorMessage } from '../../../../core/utils/error.util';
-import { debounceTime, distinctUntilChanged, Observable, Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Observable, Subject } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 export type MacroFilterType = 'ALL' | 'PROTEIN' | 'CARBOHYDRATE' | 'FAT';
@@ -27,7 +27,6 @@ export class FoodCatalogPageComponent implements OnInit {
   searchQuery = signal<string>('');
 
   private searchSubject = new Subject<string>();
-  // private searchSubscription?: Subscription;
 
   constructor() {
     this.searchSubject.pipe(
@@ -64,7 +63,7 @@ export class FoodCatalogPageComponent implements OnInit {
       },
       error: (err) => {
         this.isLoading.set(false);
-        this.errorMessage.set(extractErrorMessage(err, 'Eroare la încărcarea catalogului.'));
+        this.errorMessage.set(extractErrorMessage(err, 'Failed to load the food catalog.'));
       }
     });
   }

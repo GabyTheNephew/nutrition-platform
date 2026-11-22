@@ -1,74 +1,73 @@
 <div class="onboarding-container">
     <app-medical-disclaimer></app-medical-disclaimer>
 
-    <!-- Indicator pași -->
+    <!-- Step indicator -->
     <div class="steps-progress">
-        <div class="step-item" [class.active]="currentStep() >= 1">1. Date Biometrice</div>
+        <div class="step-item" [class.active]="currentStep() >= 1">1. Biometrics</div>
         <div class="step-divider"></div>
-        <div class="step-item" [class.active]="currentStep() >= 2">2. Obiectiv & Activitate</div>
+        <div class="step-item" [class.active]="currentStep() >= 2">2. Goal &amp; Activity</div>
         <div class="step-divider"></div>
-        <div class="step-item" [class.active]="currentStep() >= 3">3. Sănătate & Alimentație</div>
+        <div class="step-item" [class.active]="currentStep() >= 3">3. Health &amp; Diet</div>
         <div class="step-divider"></div>
-        <div class="step-item" [class.active]="currentStep() === 4">4. Sumar Metabolic</div>
+        <div class="step-item" [class.active]="currentStep() === 4">4. Metabolic Summary</div>
     </div>
 
     @if (errorMessage()) {
     <div class="error-banner">{{ errorMessage() }}</div>
     }
 
-    <!-- PASUL 1: DATE BIOMETRICE -->
+    <!-- STEP 1: BIOMETRICS -->
     @if (currentStep() === 1) {
     <div class="card-step">
-        <h2>Să începem cu elementele de bază</h2>
-        <p class="step-desc">Aceste date permit estimarea precisă a ratei metabolice bazale (formula Mifflin-St Jeor).
-        </p>
+        <h2>Let's start with the basics</h2>
+        <p class="step-desc">This information allows an accurate estimation of your basal metabolic rate (Mifflin-St Jeor formula).</p>
 
         <div class="form-grid">
             <div class="form-group full-width">
-                <label>Nume sau Pseudonim</label>
-                <input type="text" [(ngModel)]="displayName" placeholder="Ex: Alex" class="input-field" />
+                <label>Name or Nickname</label>
+                <input type="text" [(ngModel)]="displayName" placeholder="e.g., Alex" class="input-field" />
             </div>
 
             <div class="form-group">
-                <label>Sex Biologic</label>
+                <label>Biological Sex</label>
                 <div class="toggle-group">
                     <button type="button" class="btn-toggle" [class.active]="gender === 'MALE'"
-                        (click)="gender = 'MALE'">Bărbat</button>
+                        (click)="gender = 'MALE'">Male</button>
                     <button type="button" class="btn-toggle" [class.active]="gender === 'FEMALE'"
-                        (click)="gender = 'FEMALE'">Femeie</button>
+                        (click)="gender = 'FEMALE'">Female</button>
                 </div>
             </div>
 
             <div class="form-group">
-                <label>Vârstă (ani)</label>
+                <label>Age (years)</label>
                 <input type="number" [(ngModel)]="age" min="14" max="100" class="input-field" />
             </div>
 
             <div class="form-group">
-                <label>Înălțime (cm)</label>
+                <label>Height (cm)</label>
                 <input type="number" [(ngModel)]="heightCm" min="100" max="250" class="input-field" />
             </div>
 
             <div class="form-group">
-                <label>Greutate Actuală (kg)</label>
+                <label>Current Weight (kg)</label>
                 <input type="number" [(ngModel)]="weightKg" min="30" max="300" step="0.5" class="input-field" />
             </div>
         </div>
 
         <div class="action-bar right">
-            <button type="button" class="btn btn-primary" (click)="nextStep()">Pasul următor →</button>
+            <button type="button" class="btn btn-primary" (click)="nextStep()">Next Step →</button>
         </div>
     </div>
     }
 
-    <!-- PASUL 2: OBIECTIV, RITM & NIVEL ACTIVITATE -->
+    <!-- STEP 2: GOAL, PACE & ACTIVITY LEVEL -->
     @if (currentStep() === 2) {
     <div class="card-step">
-        <h2>Care este obiectivul tău principal?</h2>
-        <p class="step-desc">Alege ținta ta fizică și ritmul în care dorești să progresezi.</p>
+        <h2>What is your main goal?</h2>
+        <p class="step-desc">Choose your fitness target and the pace at which you want to progress.</p>
 
-        <!-- Grilă Obiective -->
-        <label class="section-label">Obiectiv Fitness</label>
+        <!-- Goals Grid -->
+        <label class="section-label">Fitness Goal</label>
         <div class="selection-grid">
             @for (key of goalKeys; track key) {
             <div class="grid-card" [class.selected]="goal === key" (click)="goal = key">
@@ -78,9 +77,9 @@
             }
         </div>
 
-        <!-- Ritm Obiectiv (Afișat doar la Slăbire sau Masă) -->
+        <!-- Goal Pace (Shown only for Weight Loss or Muscle Gain) -->
         @if (goal === 'LOSE_WEIGHT' || goal === 'GAIN_MUSCLE') {
-        <label class="section-label">Ritm de progres</label>
+        <label class="section-label">Progress Pace</label>
         <div class="selection-grid pace-grid">
             @for (pace of paceKeys; track pace) {
             <div class="grid-card pace-card" [class.selected]="goalPace === pace" (click)="goalPace = pace">
@@ -91,8 +90,8 @@
         </div>
         }
 
-        <!-- Grilă Nivel de Activitate -->
-        <label class="section-label">Nivel de Activitate Fizică Zilnică</label>
+        <!-- Daily Activity Level Grid -->
+        <label class="section-label">Daily Physical Activity Level</label>
         <div class="selection-grid">
             @for (act of activityKeys; track act) {
             <div class="grid-card" [class.selected]="activityLevel === act" (click)="activityLevel = act">
@@ -103,21 +102,20 @@
         </div>
 
         <div class="action-bar between">
-            <button type="button" class="btn btn-secondary" (click)="prevStep()">← Înapoi</button>
-            <button type="button" class="btn btn-primary" (click)="nextStep()">Pasul următor →</button>
+            <button type="button" class="btn btn-secondary" (click)="prevStep()">← Back</button>
+            <button type="button" class="btn btn-primary" (click)="nextStep()">Next Step →</button>
         </div>
     </div>
     }
 
-    <!-- PASUL 3: SĂNĂTATE & RESTRICȚII ALIMENTARE -->
+    <!-- STEP 3: HEALTH & DIETARY RESTRICTIONS -->
     @if (currentStep() === 3) {
     <div class="card-step">
-        <h2>Particularități de Sănătate & Nutriție</h2>
-        <p class="step-desc">Selectează afecțiunile diagnosticate și alergiile tale pentru ca AI-ul să excludă automat
-            ingredientele contraindicate.</p>
+        <h2>Health &amp; Nutrition Details</h2>
+        <p class="step-desc">Select your diagnosed conditions and allergies so the AI automatically excludes contraindicated ingredients.</p>
 
-        <!-- Condiții Medicale -->
-        <label class="section-label">Afecțiuni Medicale (Selecție multiplă)</label>
+        <!-- Medical Conditions -->
+        <label class="section-label">Medical Conditions (Multiple selection)</label>
         <div class="chip-grid">
             @for (cond of conditionKeys; track cond) {
             <button type="button" class="chip-card" [class.active]="isConditionSelected(cond)"
@@ -127,8 +125,8 @@
             }
         </div>
 
-        <!-- Restricții Alimentare -->
-        <label class="section-label">Restricții & Preferințe Alimentare</label>
+        <!-- Dietary Restrictions -->
+        <label class="section-label">Dietary Restrictions &amp; Preferences</label>
         <div class="chip-grid">
             @for (rest of restrictionKeys; track rest) {
             <button type="button" class="chip-card" [class.active]="isRestrictionSelected(rest)"
@@ -139,27 +137,27 @@
         </div>
 
         <div class="action-bar between">
-            <button type="button" class="btn btn-secondary" (click)="prevStep()">← Înapoi</button>
+            <button type="button" class="btn btn-secondary" (click)="prevStep()">← Back</button>
             <button type="button" class="btn btn-primary" [disabled]="isLoading()" (click)="submitOnboarding()">
-                @if (isLoading()) { Calculez profilul... } @else { Finalizează & Calculează Profilul }
+                @if (isLoading()) { Calculating profile... } @else { Finish &amp; Calculate Profile }
             </button>
         </div>
     </div>
     }
 
-    <!-- PASUL 4: SUMAR METABOLIC -->
+    <!-- STEP 4: METABOLIC SUMMARY -->
     @if (currentStep() === 4 && savedProfile(); as p) {
     <div class="card-step summary-card">
         <div class="success-header">
             <div class="check-circle">✓</div>
-            <h2>Profil Nutrițional Activ</h2>
-            <p>Analiză metabolică pentru <strong>{{ p.displayName }}</strong> ({{ genderLabels[p.gender] }}, {{ p.age }}
-                ani, {{ p.weightKg }} kg):</p>
+            <h2>Active Nutritional Profile</h2>
+            <p>Metabolic analysis for <strong>{{ p.displayName }}</strong> ({{ genderLabels[p.gender] }}, {{ p.age }}
+                years old, {{ p.weightKg }} kg):</p>
         </div>
 
         <div class="metrics-grid">
             <div class="metric-box">
-                <span class="metric-label">Indice Masă Corporală (BMI)</span>
+                <span class="metric-label">Body Mass Index (BMI)</span>
                 <span class="metric-value">{{ p.bmi }}</span>
                 <span class="metric-badge" [ngClass]="bmiLabels[p.bmiCategory].colorClass">
                     {{ bmiLabels[p.bmiCategory].label }}
@@ -167,46 +165,46 @@
             </div>
 
             <div class="metric-box">
-                <span class="metric-label">Rată Metabolică Bazală (BMR)</span>
+                <span class="metric-label">Basal Metabolic Rate (BMR)</span>
                 <span class="metric-value">{{ p.bmr }} <small>kcal</small></span>
-                <span class="metric-sub">Consum în repaus absolut</span>
+                <span class="metric-sub">Energy burned at complete rest</span>
             </div>
 
             <div class="metric-box">
-                <span class="metric-label">Consum Zilnic Total (TDEE)</span>
+                <span class="metric-label">Total Daily Energy Expenditure (TDEE)</span>
                 <span class="metric-value">{{ p.tdee }} <small>kcal</small></span>
                 <span class="metric-sub">{{ activityLabels[p.activityLevel].title }}</span>
             </div>
 
             <div class="metric-box highlight">
-                <span class="metric-label">Țintă Calorică Recomandată</span>
-                <span class="metric-value">{{ p.targetCalories }} <small>kcal/zi</small></span>
+                <span class="metric-label">Recommended Calorie Target</span>
+                <span class="metric-value">{{ p.targetCalories }} <small>kcal/day</small></span>
                 <span class="metric-sub">{{ goalLabels[p.goal].title }}</span>
             </div>
         </div>
 
-        <h3>Defalcare Macronutrienți Țintă</h3>
+        <h3>Target Macronutrient Breakdown</h3>
         <div class="macros-grid">
             <div class="macro-card protein">
-                <span class="macro-name">Proteine</span>
+                <span class="macro-name">Protein</span>
                 <span class="macro-val">{{ p.targetProteinGrams }}g</span>
-                <span class="macro-desc">Protecție musculară</span>
+                <span class="macro-desc">Muscle preservation</span>
             </div>
             <div class="macro-card carbs">
-                <span class="macro-name">Carbohidrați</span>
+                <span class="macro-name">Carbohydrates</span>
                 <span class="macro-val">{{ p.targetCarbsGrams }}g</span>
-                <span class="macro-desc">Energie & performanță</span>
+                <span class="macro-desc">Energy &amp; performance</span>
             </div>
             <div class="macro-card fats">
-                <span class="macro-name">Grăsimi Sănătoase</span>
+                <span class="macro-name">Healthy Fats</span>
                 <span class="macro-val">{{ p.targetFatGrams }}g</span>
-                <span class="macro-desc">Echilibru hormonal</span>
+                <span class="macro-desc">Hormonal balance</span>
             </div>
         </div>
 
         <div class="action-bar between">
-            <button type="button" class="btn btn-secondary" (click)="restartQuiz()">✏️ Reconfigurează Profilul</button>
-            <button type="button" class="btn btn-primary" (click)="finish()">Explorează alimentele & rețetele →</button>
+            <button type="button" class="btn btn-secondary" (click)="restartQuiz()">✏️ Reconfigure Profile</button>
+            <button type="button" class="btn btn-primary" (click)="finish()">Explore foods &amp; recipes →</button>
         </div>
     </div>
     }

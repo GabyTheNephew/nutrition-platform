@@ -1,16 +1,16 @@
 <section class="recipes-container">
     <div class="page-header">
         <div>
-            <h2>Rețete Meal Prep</h2>
-            <p>Rețete salvate cu macronutrienți calculați automat</p>
+            <h2>Meal Prep Recipes</h2>
+            <p>Saved recipes with automatically calculated macronutrients</p>
         </div>
         <a routerLink="/recipes/new" class="btn-primary">
-            + Rețetă Nouă
+            + New Recipe
         </a>
     </div>
 
     @if (isLoading()) {
-    <p class="status-msg">Se încarcă rețetele...</p>
+    <p class="status-msg">Loading recipes...</p>
     } @else if (errorMessage()) {
     <p class="status-msg error">{{ errorMessage() }}</p>
     } @else {
@@ -19,7 +19,7 @@
         <app-recipe-card [recipe]="recipe"></app-recipe-card>
         } @empty {
         <div class="empty-state">
-            <p>Nu există nicio rețetă salvată.</p>
+            <p>No saved recipes yet.</p>
         </div>
         }
     </div>

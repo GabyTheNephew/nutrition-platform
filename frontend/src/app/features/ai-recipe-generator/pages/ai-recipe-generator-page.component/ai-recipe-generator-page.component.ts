@@ -22,14 +22,11 @@ export class AiRecipeGeneratorPageComponent {
   private recipeApi = inject(RecipeApiService);
 
   readonly mealTypes: { value: MealType; label: string }[] = [
-    { value: 'BREAKFAST', label: 'Mic Dejun' },
-    { value: 'LUNCH', label: 'Prânz' },
-    { value: 'DINNER', label: 'Cină' },
-    { value: 'SNACK', label: 'Gustare' }
+    { value: 'BREAKFAST', label: 'Breakfast' },
+    { value: 'LUNCH', label: 'Lunch' },
+    { value: 'DINNER', label: 'Dinner' },
+    { value: 'SNACK', label: 'Snack' }
   ];
-
-  savedRecipeIds = signal<Record<number, string>>({});
-  dirtyIndices = signal<Set<number>>(new Set());
 
   selectedMealType = signal<MealType>('LUNCH');
   extraNotes = signal<string>('');
@@ -37,6 +34,8 @@ export class AiRecipeGeneratorPageComponent {
   generatedRecipes = signal<GeneratedRecipe[]>([]);
   selectedIndex = signal<number | null>(null);
   chatHistory = signal<ChatMessage[]>([]);
+  savedRecipeIds = signal<Record<number, string>>({});
+  dirtyIndices = signal<Set<number>>(new Set());
 
   isGenerating = signal<boolean>(false);
   isRefining = signal<boolean>(false);
@@ -76,7 +75,7 @@ export class AiRecipeGeneratorPageComponent {
       },
       error: (err) => {
         this.isGenerating.set(false);
-        this.errorMessage.set(extractErrorMessage(err, 'Nu s-au putut genera rețetele AI.'));
+        this.errorMessage.set(extractErrorMessage(err, 'Failed to generate AI recipes.'));
       }
     });
   }
@@ -130,7 +129,7 @@ export class AiRecipeGeneratorPageComponent {
       error: (err) => {
         this.isRefining.set(false);
         this.chatHistory.set(historySnapshot);
-        this.errorMessage.set(extractErrorMessage(err, 'Nu s-a putut procesa mesajul de rafinare.'));
+        this.errorMessage.set(extractErrorMessage(err, 'Failed to process the refinement message.'));
       }
     });
   }
@@ -165,12 +164,12 @@ export class AiRecipeGeneratorPageComponent {
           return next;
         });
 
-        const actionText = existingId ? 'actualizată' : 'salvată';
-        this.successMessage.set(`Rețeta „${recipe.name}” a fost ${actionText} în Rețete Meal Prep!`);
+        const actionText = existingId ? 'updated' : 'saved';
+        this.successMessage.set(`Recipe "${recipe.name}" has been ${actionText} in Meal Prep Recipes!`);
       },
       error: (err) => {
         this.isSaving.set(false);
-        this.errorMessage.set(extractErrorMessage(err, 'Nu s-a putut salva rețeta în catalogul de rețete.'));
+        this.errorMessage.set(extractErrorMessage(err, 'Failed to save the recipe.'));
       }
     });
   }

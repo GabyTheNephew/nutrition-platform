@@ -1,28 +1,28 @@
 <section class="chat-panel">
   <header class="chat-header">
     <div>
-      <h3>Ajustează rețeta cu AI</h3>
-      <p class="subtitle">Rețetă activă: <strong>{{ recipeName }}</strong></p>
+      <h3>Refine Recipe with AI</h3>
+      <p class="subtitle">Active recipe: <strong>{{ recipeName }}</strong></p>
     </div>
   </header>
 
   <div class="messages-list">
     @for (msg of messages; track $index) {
       <div class="message-bubble" [class.user]="msg.role === 'user'" [class.assistant]="msg.role === 'assistant'">
-        <span class="role-label">{{ msg.role === 'user' ? 'Tu' : 'Chef AI' }}</span>
+        <span class="role-label">{{ msg.role === 'user' ? 'You' : 'Chef AI' }}</span>
         <p>{{ msg.content }}</p>
       </div>
     } @empty {
       <div class="chat-empty">
-        <p>Poți cere modificări de gramaj, înlocuiri de ingrediente sau sfaturi de gătit.</p>
-        <span class="hint">Ex: „Redu orezul la 100g” sau „Ce condimente se potrivesc?”</span>
+        <p>Ask for quantity adjustments, ingredient swaps, or cooking tips.</p>
+        <span class="hint">Ex: "Reduce rice to 100g" or "What spices go well with this?"</span>
       </div>
     }
 
     @if (isSending) {
       <div class="message-bubble assistant loading">
         <span class="role-label">Chef AI</span>
-        <p>Se recalculează rețeta...</p>
+        <p>Recalculating recipe...</p>
       </div>
     }
   </div>
@@ -33,11 +33,11 @@
       name="draftMessage"
       [(ngModel)]="draftMessage"
       [disabled]="isSending"
-      placeholder="Scrie o modificare sau o întrebare..."
+      placeholder="Write a modification or question..."
       autocomplete="off"
     />
     <button type="submit" [disabled]="!draftMessage.trim() || isSending">
-      {{ isSending ? '...' : 'Trimite' }}
+      {{ isSending ? '...' : 'Send' }}
     </button>
   </form>
 </section>

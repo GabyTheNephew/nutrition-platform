@@ -4,24 +4,24 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserProfileApiService } from '../../services/user-profile-api.service';
 import { MedicalDisclaimerComponent } from '../../components/medical-disclaimer.component/medical-disclaimer.component';
-import { 
-  ActivityLevel, 
-  DietaryRestriction, 
-  FitnessGoal, 
-  Gender, 
-  GoalPace, 
-  HealthCondition, 
-  UserProfile, 
-  UserProfileCreate 
+import {
+  ActivityLevel,
+  DietaryRestriction,
+  FitnessGoal,
+  Gender,
+  GoalPace,
+  HealthCondition,
+  UserProfile,
+  UserProfileCreate
 } from '../../models/user-profile.model';
-import { 
-  ACTIVITY_LEVEL_LABELS, 
-  BMI_CATEGORY_LABELS, 
-  DIETARY_RESTRICTION_LABELS, 
-  FITNESS_GOAL_LABELS, 
-  GENDER_LABELS, 
-  GOAL_PACE_LABELS, 
-  HEALTH_CONDITION_LABELS 
+import {
+  ACTIVITY_LEVEL_LABELS,
+  BMI_CATEGORY_LABELS,
+  DIETARY_RESTRICTION_LABELS,
+  FITNESS_GOAL_LABELS,
+  GENDER_LABELS,
+  GOAL_PACE_LABELS,
+  HEALTH_CONDITION_LABELS
 } from '../../models/user-profile-labels';
 
 @Component({
@@ -67,13 +67,13 @@ export class OnboardingPageComponent implements OnInit {
     'VEGAN'
   ];
 
-  // Stare ecran
+  // Screen state
   currentStep = signal<number>(1);
-  isLoading = signal<boolean>(true); // Pornim cu true pentru verificarea profilului
+  isLoading = signal<boolean>(true); // Start with true while checking existing profile
   errorMessage = signal<string>('');
   savedProfile = signal<UserProfile | null>(null);
 
-  // Câmpuri formular
+  // Form fields
   displayName = '';
   gender: Gender = 'MALE';
   age: number = 22;
@@ -94,11 +94,11 @@ export class OnboardingPageComponent implements OnInit {
       next: (profile) => {
         this.savedProfile.set(profile);
         this.populateFormFromProfile(profile);
-        this.currentStep.set(4); // Sari direct la sumarul profilului existent
+        this.currentStep.set(4); // Jump directly to existing profile summary
         this.isLoading.set(false);
       },
       error: () => {
-        // Dacă primește 404, înseamnă că nu există profil salvat -> afișează Pasul 1
+        // If 404, no saved profile exists -> show Step 1
         this.isLoading.set(false);
       }
     });
@@ -167,19 +167,19 @@ export class OnboardingPageComponent implements OnInit {
     this.errorMessage.set('');
     if (this.currentStep() === 1) {
       if (!this.displayName.trim()) {
-        this.errorMessage.set('Vă rugăm introduceți un nume.');
+        this.errorMessage.set('Please enter a name.');
         return;
       }
       if (this.age < 14 || this.age > 100) {
-        this.errorMessage.set('Vârsta trebuie să fie între 14 și 100 de ani.');
+        this.errorMessage.set('Age must be between 14 and 100 years.');
         return;
       }
       if (this.heightCm < 100 || this.heightCm > 250) {
-        this.errorMessage.set('Înălțimea trebuie să fie între 100 și 250 cm.');
+        this.errorMessage.set('Height must be between 100 and 250 cm.');
         return;
       }
       if (this.weightKg < 30 || this.weightKg > 300) {
-        this.errorMessage.set('Greutatea trebuie să fie între 30 și 300 kg.');
+        this.errorMessage.set('Weight must be between 30 and 300 kg.');
         return;
       }
     }
@@ -222,7 +222,7 @@ export class OnboardingPageComponent implements OnInit {
       },
       error: (err) => {
         this.isLoading.set(false);
-        const serverMsg = err.error?.message || err.error?.errors?.displayName || 'A apărut o eroare la salvarea profilului.';
+        const serverMsg = err.error?.message || err.error?.errors?.displayName || 'An error occurred while saving the profile.';
         this.errorMessage.set(serverMsg);
       }
     });

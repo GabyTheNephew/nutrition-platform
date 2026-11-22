@@ -2,9 +2,9 @@ import { Component, EventEmitter, Input, Output, computed, signal } from '@angul
 import { CommonModule } from '@angular/common';
 
 export interface DayCard {
-  date: string;
-  dayName: string;
-  displayDate: string;
+  date: string;        // Format YYYY-MM-DD
+  dayName: string;     // Monday, Tuesday, etc.
+  displayDate: string; // 21 Oct
 }
 
 @Component({
@@ -16,7 +16,6 @@ export interface DayCard {
 })
 export class WeekDayPickerComponent {
   @Input() selectedDates: string[] = [];
-
   @Output() datesChange = new EventEmitter<string[]>();
 
   readonly todayIso = new Date().toISOString().split('T')[0];
@@ -31,7 +30,7 @@ export class WeekDayPickerComponent {
   currentWeekDays = computed<DayCard[]>(() => {
     const monday = this.weekStartMonday();
     const days: DayCard[] = [];
-    const dayNames = ['Duminică', 'Luni', 'Marți', 'Miercuri', 'Joi', 'Vineri', 'Sâmbătă'];
+    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
     for (let i = 0; i < 7; i++) {
       const current = new Date(monday);
@@ -39,7 +38,7 @@ export class WeekDayPickerComponent {
 
       const isoDate = current.toISOString().split('T')[0];
       const dayName = dayNames[current.getDay()];
-      const displayDate = `${current.getDate()} ${current.toLocaleString('ro-RO', { month: 'short' })}`;
+      const displayDate = `${current.getDate()} ${current.toLocaleString('en-US', { month: 'short' })}`;
 
       days.push({ date: isoDate, dayName, displayDate });
     }

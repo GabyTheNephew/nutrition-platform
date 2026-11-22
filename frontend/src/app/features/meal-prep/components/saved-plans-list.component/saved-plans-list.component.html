@@ -1,5 +1,5 @@
 <section class="saved-plans-card">
-  <h4>Planuri Săptămânale Recente</h4>
+  <h4>Recent Weekly Plans</h4>
   <ul class="saved-plans-list">
     @for (plan of plans; track plan.id) {
       <li>
@@ -9,9 +9,9 @@
         </div>
         <div class="item-actions">
           <button type="button" class="btn-view-list" (click)="onSelectShoppingList(plan.id)">
-            Vezi Cumpărături
+            View Shopping List
           </button>
-          <button type="button" class="btn-delete-plan" (click)="onDelete(plan.id)" title="Șterge plan">
+          <button type="button" class="btn-delete-plan" (click)="onDelete(plan.id)" title="Delete plan">
             ✕
           </button>
         </div>

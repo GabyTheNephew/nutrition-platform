@@ -8,7 +8,7 @@ import { MealPlan, MealPlanCreate, MealPlanItemCreate, MealType, ShoppingListRes
 import { ShoppingListComponent } from '../../components/shopping-list.component/shopping-list.component';
 import { SavedPlansListComponent } from '../../components/saved-plans-list.component/saved-plans-list.component';
 import { WeekDayPickerComponent } from '../../components/week-day-picker.component/week-day-picker.component';
-import { DailyMenuConfigComponent, MealChangeEvent } from '../../components/daily-menu-config.component/daily-menu-config.component'; // <-- Import nou
+import { DailyMenuConfigComponent, MealChangeEvent } from '../../components/daily-menu-config.component/daily-menu-config.component';
 import { extractErrorMessage } from '../../../../core/utils/error.util';
 
 @Component({
@@ -37,7 +37,7 @@ export class MealPlannerPageComponent implements OnInit {
   isSubmitting = signal<boolean>(false);
   errorMessage = signal<string>('');
 
-  planName = signal<string>('Meal Prep Săptămânal');
+  planName = signal<string>('Weekly Meal Prep');
 
   selectedMeals = signal<Record<MealType, string>>({
     BREAKFAST: '',
@@ -63,7 +63,7 @@ export class MealPlannerPageComponent implements OnInit {
 
     this.recipeApi.getAllRecipes().subscribe({
       next: (recipes) => this.availableRecipes.set(recipes),
-      error: (err) => this.errorMessage.set(extractErrorMessage(err, 'Nu s-au putut încărca rețetele.'))
+      error: (err) => this.errorMessage.set(extractErrorMessage(err, 'Failed to load recipes.'))
     });
 
     this.mealPlanApi.getAllMealPlans().subscribe({
@@ -73,7 +73,7 @@ export class MealPlannerPageComponent implements OnInit {
       },
       error: (err) => {
         this.isLoading.set(false);
-        this.errorMessage.set(extractErrorMessage(err, 'Nu s-au putut încărca planurile existente.'));
+        this.errorMessage.set(extractErrorMessage(err, 'Failed to load existing meal plans.'));
       }
     });
   }
@@ -95,13 +95,13 @@ export class MealPlannerPageComponent implements OnInit {
       .filter(([_, recipeId]) => !!recipeId);
 
     if (activeMeals.length === 0) {
-      this.errorMessage.set('Selectează cel puțin o rețetă în meniul zilnic (Pasul 2).');
+      this.errorMessage.set('Select at least one recipe in the daily menu (Step 2).');
       return;
     }
 
     const dates = [...this.selectedDates()].sort();
     if (dates.length === 0) {
-      this.errorMessage.set('Alege cel puțin o zi din calendar în care vei consuma aceste mese (Pasul 3).');
+      this.errorMessage.set('Choose at least one day on the calendar when you will eat these meals (Step 3).');
       return;
     }
 
@@ -118,7 +118,7 @@ export class MealPlannerPageComponent implements OnInit {
     }
 
     const payload: MealPlanCreate = {
-      name: this.planName().trim() || 'Meal Prep Săptămânal',
+      name: this.planName().trim() || 'Weekly Meal Prep',
       startDate: dates[0],
       endDate: dates[dates.length - 1],
       items
@@ -135,7 +135,7 @@ export class MealPlannerPageComponent implements OnInit {
       },
       error: (err) => {
         this.isSubmitting.set(false);
-        this.errorMessage.set(extractErrorMessage(err, 'Eroare la crearea planului.'));
+        this.errorMessage.set(extractErrorMessage(err, 'Failed to create the meal plan.'));
       }
     });
   }
@@ -143,12 +143,12 @@ export class MealPlannerPageComponent implements OnInit {
   onViewShoppingList(planId: string): void {
     this.mealPlanApi.getShoppingList(planId).subscribe({
       next: (list) => this.currentShoppingList.set(list),
-      error: (err) => this.errorMessage.set(extractErrorMessage(err, 'Nu s-a putut genera lista de cumpărături.'))
+      error: (err) => this.errorMessage.set(extractErrorMessage(err, 'Failed to generate the shopping list.'))
     });
   }
 
   onDeletePlan(planId: string): void {
-    if (!confirm('Ești sigur că vrei să ștergi acest plan?')) return;
+    if (!confirm('Are you sure you want to delete this meal plan?')) return;
 
     this.mealPlanApi.deleteMealPlan(planId).subscribe({
       next: () => {
@@ -157,7 +157,7 @@ export class MealPlannerPageComponent implements OnInit {
           this.currentShoppingList.set(null);
         }
       },
-      error: (err) => this.errorMessage.set(extractErrorMessage(err, 'Nu s-a putut șterge planul.'))
+      error: (err) => this.errorMessage.set(extractErrorMessage(err, 'Failed to delete the meal plan.'))
     });
   }
 }
