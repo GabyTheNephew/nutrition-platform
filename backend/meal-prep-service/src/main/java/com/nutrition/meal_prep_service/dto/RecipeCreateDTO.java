@@ -15,16 +15,16 @@ import java.util.List;
 @Builder
 public class RecipeCreateDTO {
 
-    @NotBlank(message = "Numele rețetei este obligatoriu.")
+    @NotBlank(message = "Recipe name is required.")
     private String name;
 
     private String instructions;
 
-    @NotNull(message = "Numărul de porții este obligatoriu.")
-    @Positive(message = "Numărul de porții trebuie să fie un număr pozitiv.")
+    @NotNull(message = "Number of servings is required.")
+    @Positive(message = "Number of servings must be a positive number.")
     private Integer servings;
 
-    @NotEmpty(message = "Rețeta trebuie să conțină cel puțin un ingredient.")
+    @NotEmpty(message = "Recipe must contain at least one ingredient.")
     private List<@Valid RecipeIngredientCreateDTO> ingredients;
-    // Notă: @Valid aici forțează Spring să intre în fiecare element din listă și să-i valideze cantitatea și ID-ul
+    // Note: @Valid here forces Spring to validate each element's quantity and ID in the list
 }

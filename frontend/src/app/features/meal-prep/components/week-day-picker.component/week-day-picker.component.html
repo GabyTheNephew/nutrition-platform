@@ -1,22 +1,22 @@
 <div class="step-section">
     <div class="step-header-row">
-        <span class="step-title">3. În ce zile mănânci acest meniu?</span>
+        <span class="step-title">3. Which days will you eat this menu?</span>
         <div class="week-nav">
             <button type="button" class="btn-nav" [disabled]="!canNavigateToPreviousWeek()" (click)="previousWeek()"
-                title="Săptămâna anterioară">
+                title="Previous week">
                 ◀
             </button>
-            <span class="week-label">Săptămâna selectată</span>
-            <button type="button" class="btn-nav" (click)="nextWeek()" title="Săptămâna viitoare">
+            <span class="week-label">Selected week</span>
+            <button type="button" class="btn-nav" (click)="nextWeek()" title="Next week">
                 ▶
             </button>
         </div>
     </div>
 
     <div class="quick-shortcuts">
-        <button type="button" class="btn-chip" (click)="selectWorkdays()">Zile lucrătoare rămase</button>
-        <button type="button" class="btn-chip" (click)="selectAllWeek()">Toată săptămâna (rămasă)</button>
-        <button type="button" class="btn-chip btn-chip-secondary" (click)="clearDates()">Deselectează tot</button>
+        <button type="button" class="btn-chip" (click)="selectWorkdays()">Remaining workdays</button>
+        <button type="button" class="btn-chip" (click)="selectAllWeek()">Full remaining week</button>
+        <button type="button" class="btn-chip btn-chip-secondary" (click)="clearDates()">Clear all</button>
     </div>
 
     <div class="days-selector-grid">

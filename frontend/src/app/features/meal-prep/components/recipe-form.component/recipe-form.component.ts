@@ -43,8 +43,8 @@ export class RecipeFormComponent implements OnInit {
         this.addIngredient();
       },
       error: (err) => {
-        console.error('Eroare la încărcarea alimentelor:', err);
-        this.errorMessage.set(extractErrorMessage(err, 'Nu s-au putut încărca alimentele pentru dropdown.'));
+        console.error('Error loading foods:', err);
+        this.errorMessage.set(extractErrorMessage(err, 'Failed to load food items for the dropdown.'));
       }
     });
   }
@@ -79,8 +79,8 @@ export class RecipeFormComponent implements OnInit {
       },
       error: (err) => {
         this.isSubmitting.set(false);
-        console.error('Eroare la crearea rețetei:', err);
-        this.errorMessage.set(extractErrorMessage(err, 'Nu s-a putut salva rețeta.'));
+        console.error('Error creating recipe:', err);
+        this.errorMessage.set(extractErrorMessage(err, 'Failed to save the recipe.'));
       }
     });
   }

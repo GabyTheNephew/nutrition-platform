@@ -18,15 +18,15 @@ import java.util.List;
 @Builder
 public class MealPlanCreateDTO {
 
-    @NotBlank(message = "Numele planului este obligatoriu.")
+    @NotBlank(message = "Meal plan name is required.")
     private String name;
 
-    @NotNull(message = "Data de început este obligatorie.")
+    @NotNull(message = "Start date is required.")
     private LocalDate startDate;
 
-    @NotNull(message = "Data de sfârșit este obligatorie.")
+    @NotNull(message = "End date is required.")
     private LocalDate endDate;
 
-    @NotEmpty(message = "Planul trebuie să conțină cel puțin o masă.")
+    @NotEmpty(message = "Meal plan must contain at least one meal.")
     private List<@Valid MealPlanItemCreateDTO> items;
 }

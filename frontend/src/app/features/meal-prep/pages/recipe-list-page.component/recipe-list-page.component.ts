@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core'; // <-- adaugă 'signal'
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RecipeApiService } from '../../services/recipe-api.service';
 import { Recipe } from '../../models/recipe.model';
@@ -21,7 +21,7 @@ export class RecipeListPageComponent implements OnInit {
   errorMessage = signal<string>('');
 
   ngOnInit(): void {
-    if (this.recipes.length === 0) {
+    if (this.recipes().length === 0) {
       this.isLoading.set(true);
     }
 
@@ -32,8 +32,8 @@ export class RecipeListPageComponent implements OnInit {
       },
       error: (err) => {
         this.isLoading.set(false);
-        console.error('Eroare la încărcarea rețetelor:', err);
-        this.errorMessage.set(extractErrorMessage(err, 'Nu am putut încărca rețetele de la server.'));
+        console.error('Error loading recipes:', err);
+        this.errorMessage.set(extractErrorMessage(err, 'Failed to load recipes from the server.'));
       }
     });
   }

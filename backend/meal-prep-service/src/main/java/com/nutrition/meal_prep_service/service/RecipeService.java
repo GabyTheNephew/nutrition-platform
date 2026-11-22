@@ -30,10 +30,10 @@ public class RecipeService implements IRecipeService {
     @Transactional
     public RecipeDTO updateRecipe(UUID id, RecipeCreateDTO dto) {
         Recipe recipe = recipeRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Rețeta cu ID-ul " + id + " nu a fost găsită."));
+                .orElseThrow(() -> new ResourceNotFoundException("Recipe with ID " + id + " was not found."));
 
         if (recipeRepository.existsByNameIgnoreCaseAndIdNot(dto.getName(), id)) {
-            throw new BusinessException("Rețeta cu numele '" + dto.getName() + "' există deja.");
+            throw new BusinessException("Recipe with name '" + dto.getName() + "' already exists.");
         }
 
         recipe.setName(dto.getName());
@@ -44,7 +44,7 @@ public class RecipeService implements IRecipeService {
         recipe.setTotalProtein(0.0);
         recipe.setTotalCarbohydrates(0.0);
         recipe.setTotalFat(0.0);
-        recipe.getIngredients().clear(); // orphanRemoval = true șterge ingredientele vechi din DB
+        recipe.getIngredients().clear(); // orphanRemoval = true deletes old ingredients from DB
 
         for (RecipeIngredientCreateDTO ingDto : dto.getIngredients()) {
             FoodItemDTO food = foodCatalogClient.getFoodById(ingDto.getFoodItemId());
@@ -72,7 +72,7 @@ public class RecipeService implements IRecipeService {
     @Transactional
     public RecipeDTO createRecipe(RecipeCreateDTO dto) {
         if (recipeRepository.existsByNameIgnoreCase(dto.getName())) {
-            throw new BusinessException("Rețeta cu numele '" + dto.getName() + "' există deja.");
+            throw new BusinessException("Recipe with name '" + dto.getName() + "' already exists.");
         }
 
         Recipe recipe = Recipe.builder()
@@ -120,7 +120,7 @@ public class RecipeService implements IRecipeService {
     @Transactional(readOnly = true)
     public RecipeDTO getRecipeById(UUID id) {
         Recipe recipe = recipeRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Rețeta cu ID-ul " + id + " nu a fost găsită."));
+                .orElseThrow(() -> new ResourceNotFoundException("Recipe with ID " + id + " was not found."));
         return recipeMapper.toDTO(recipe);
     }
 
@@ -128,7 +128,7 @@ public class RecipeService implements IRecipeService {
     @Transactional
     public void deleteRecipe(UUID id) {
         if (!recipeRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Rețeta cu ID-ul " + id + " nu a fost găsită.");
+            throw new ResourceNotFoundException("Recipe with ID " + id + " was not found.");
         }
         recipeRepository.deleteById(id);
     }

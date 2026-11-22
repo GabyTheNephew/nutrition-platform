@@ -27,7 +27,7 @@ public class FoodItemServiceImpl implements IFoodItemService {
     @Transactional
     public FoodItemDTO createFoodItem(FoodItemCreateDTO createDTO) {
         if (foodItemRepository.existsByNameIgnoreCase(createDTO.getName())) {
-            throw new BusinessException("Alimentul cu numele '" + createDTO.getName() + "' există deja.");
+            throw new BusinessException("Food item with name '" + createDTO.getName() + "' already exists.");
         }
 
         FoodItem entity = foodItemMapper.toEntity(createDTO);
@@ -39,7 +39,7 @@ public class FoodItemServiceImpl implements IFoodItemService {
     @Transactional(readOnly = true)
     public FoodItemDTO getFoodItemById(UUID id) {
         FoodItem entity = foodItemRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Alimentul cu ID-ul " + id + " nu a fost găsit."));
+                .orElseThrow(() -> new ResourceNotFoundException("Food item with ID " + id + " was not found."));
         return foodItemMapper.toDTO(entity);
     }
 
@@ -63,18 +63,18 @@ public class FoodItemServiceImpl implements IFoodItemService {
     @Transactional
     public FoodItemDTO updateFoodItem(UUID id, FoodItemUpdateDTO updateDTO) {
         FoodItem entity = foodItemRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Alimentul cu ID-ul " + id + " nu a fost găsit."));
+                .orElseThrow(() -> new ResourceNotFoundException("Food item with ID " + id + " was not found."));
 
-        // Verifică dacă noul nume este deja folosit de un alt aliment
+        // Check if the new name is already used by another food item
         foodItemRepository.findByNameIgnoreCase(updateDTO.getName())
                 .ifPresent(existing -> {
                     if (!existing.getId().equals(id)) {
-                        throw new BusinessException("Numele '" + updateDTO.getName() + "' este deja folosit de un alt aliment.");
+                        throw new BusinessException("The name '" + updateDTO.getName() + "' is already used by another food item.");
                     }
                 });
 
         foodItemMapper.updateEntityFromDTO(updateDTO, entity);
-        // calculateDominantMacro va rula automat prin @PreUpdate
+        // calculateDominantMacro will run automatically via @PreUpdate
         FoodItem updated = foodItemRepository.save(entity);
         return foodItemMapper.toDTO(updated);
     }
@@ -83,7 +83,7 @@ public class FoodItemServiceImpl implements IFoodItemService {
     @Transactional
     public void deleteFoodItem(UUID id) {
         if (!foodItemRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Alimentul cu ID-ul " + id + " nu a fost găsit.");
+            throw new ResourceNotFoundException("Food item with ID " + id + " was not found.");
         }
         foodItemRepository.deleteById(id);
     }

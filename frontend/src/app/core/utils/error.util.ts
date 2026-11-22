@@ -1,16 +1,16 @@
 /**
- * Extrage un mesaj de eroare prietenos și detaliat din răspunsurile HTTP generate de Spring Boot.
- * Gestionează:
- * 1. Validările Spring Bean Validation (MethodArgumentNotValidException -> err.error.errors)
- * 2. Erorile de business personalizate (err.error.message)
- * 3. Mesajele standard de rețea sau fallback
+ * Extracts a clear, user-friendly error message from Spring Boot HTTP responses.
+ * Handles:
+ * 1. Spring Bean Validation errors (MethodArgumentNotValidException -> err.error.errors)
+ * 2. Custom business errors (err.error.message)
+ * 3. Standard network errors or fallback
  */
 export function extractErrorMessage(err: any, fallbackMessage: string): string {
   if (!err) {
     return fallbackMessage;
   }
 
-  // 1. Dacă backend-ul a returnat erori de validare pe câmpuri (Map<String, String>)
+  // 1. Field validation errors (Map<String, String>)
   if (err.error?.errors && typeof err.error.errors === 'object') {
     const errorList = Object.values(err.error.errors);
     if (errorList.length > 0) {
@@ -18,22 +18,22 @@ export function extractErrorMessage(err: any, fallbackMessage: string): string {
     }
   }
 
-  // 2. Dacă backend-ul a returnat un mesaj de business (GlobalExceptionHandler)
+  // 2. Business error message (GlobalExceptionHandler)
   if (err.error?.message && typeof err.error.message === 'string') {
     return err.error.message;
   }
 
-  // 3. Dacă este o eroare de conexiune brută (ex: Gateway oprit, CORS, timeout)
+  // 3. Raw connection / HTTP status errors
   if (err.status === 0) {
-    return 'Nu se poate comunica cu serverul (API Gateway offline sau eroare de rețea).';
+    return 'Unable to reach the server (API Gateway offline or network error).';
   }
 
   if (err.status === 404) {
-    return 'Resursa solicitată nu a fost găsită pe server (404).';
+    return 'The requested resource was not found on the server (404).';
   }
 
   if (err.status === 500) {
-    return 'Eroare internă de server (500). Încearcă din nou mai târziu.';
+    return 'Internal server error (500). Please try again later.';
   }
 
   return fallbackMessage;

@@ -11,10 +11,10 @@ import java.util.UUID;
 @Builder
 public class RecipeIngredientCreateDTO {
 
-    @NotNull(message = "ID-ul alimentului este obligatoriu.")
+    @NotNull(message = "Food item ID is required.")
     private UUID foodItemId;
 
-    @NotNull(message = "Cantitatea în grame este obligatorie.")
-    @Positive(message = "Cantitatea trebuie să fie mai mare ca zero.")
+    @NotNull(message = "Quantity in grams is required.")
+    @Positive(message = "Quantity must be greater than zero.")
     private Double quantityGrams;
 }

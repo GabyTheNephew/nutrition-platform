@@ -2,7 +2,6 @@ package com.nutrition.meal_prep_service.dto;
 
 import com.nutrition.meal_prep_service.enums.MealType;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,13 +16,13 @@ import java.util.UUID;
 @Builder
 public class MealPlanItemCreateDTO {
 
-    @NotNull(message = "ID-ul rețetei este obligatoriu.")
+    @NotNull(message = "Recipe ID is required.")
     private UUID recipeId;
 
-    @NotNull(message = "Tipul mesei este obligatoriu.")
+    @NotNull(message = "Meal type is required.")
     private MealType mealType;
 
-    @NotNull(message = "Data mesei este obligatorie.")
+    @NotNull(message = "Meal date is required.")
     private LocalDate consumeDate;
 
     @Builder.Default

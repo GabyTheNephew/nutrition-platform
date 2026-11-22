@@ -37,12 +37,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(FeignException.NotFound.class)
     public ResponseEntity<Object> handleFeignNotFound(FeignException.NotFound ex) {
-        return buildResponse(HttpStatus.NOT_FOUND, "Resursa necesară (ex: profilul activ) nu a fost găsită în serviciul apelat.");
+        return buildResponse(HttpStatus.NOT_FOUND, "The required resource (e.g., active user profile) was not found in the called service.");
     }
 
     @ExceptionHandler(FeignException.class)
     public ResponseEntity<Object> handleFeignException(FeignException ex) {
-        return buildResponse(HttpStatus.SERVICE_UNAVAILABLE, "Eroare de comunicare cu un microserviciu dependent.");
+        return buildResponse(HttpStatus.SERVICE_UNAVAILABLE, "Communication error with a dependent microservice.");
     }
 
     @ExceptionHandler(Exception.class)

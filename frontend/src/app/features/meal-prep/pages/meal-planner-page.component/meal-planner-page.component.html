@@ -2,52 +2,50 @@
     <div class="planner-layout">
         <div class="planner-main-card">
             <header class="card-header">
-                <h2>Planificator Meal Prep</h2>
-                <p class="subtitle">Configurează meniul unei zile și alege pe calendar zilele în care vei mânca aceste
-                    porții.</p>
+                <h2>Meal Prep Planner</h2>
+                <p class="subtitle">Configure a daily menu and choose on the calendar the days you will eat these servings.</p>
             </header>
 
             @if (errorMessage()) {
             <div class="alert alert-error">{{ errorMessage() }}</div>
             }
 
-            <!-- PASUL 1: Nume Plan -->
+            <!-- STEP 1: Plan Name -->
             <div class="step-section">
-                <label for="planName" class="step-title">1. Numele Planului</label>
+                <label for="planName" class="step-title">1. Plan Name</label>
                 <input id="planName" type="text" [ngModel]="planName()" (ngModelChange)="planName.set($event)"
-                    placeholder="ex: Meal Prep Birou Luni-Vineri" class="text-input">
+                    placeholder="e.g., Office Meal Prep Mon–Fri" class="text-input">
             </div>
 
-            <!-- PASUL 2: Dumb Component pentru Meniul Zilei -->
+            <!-- STEP 2: Dumb Component for Daily Menu -->
             <app-daily-menu-config [recipes]="availableRecipes()" [selectedMeals]="selectedMeals()"
                 (mealChange)="onMealChange($event)">
             </app-daily-menu-config>
 
-            <!-- PASUL 3: Dumb Component pentru Calendar -->
+            <!-- STEP 3: Dumb Component for Calendar -->
             <app-week-day-picker [selectedDates]="selectedDates()" (datesChange)="onDatesChange($event)">
             </app-week-day-picker>
 
-            <!-- Sumar și Buton Salvare -->
+            <!-- Summary & Save Button -->
             <footer class="planner-footer">
                 <div class="summary-info">
-                    Total porții de pregătit: <strong>{{ totalMealsCount() }}</strong>
+                    Total servings to prepare: <strong>{{ totalMealsCount() }}</strong>
                 </div>
                 <button type="button" class="btn btn-primary" (click)="onSubmitPlan()"
                     [disabled]="isSubmitting() || totalMealsCount() === 0">
-                    {{ isSubmitting() ? 'Se calculează...' : 'Salvează Plan & Generează Cumpărături' }}
+                    {{ isSubmitting() ? 'Calculating...' : 'Save Plan & Generate Shopping List' }}
                 </button>
             </footer>
         </div>
 
-        <!-- Panoul Dreapta: Rezultate & Istoric Dumb Components -->
+        <!-- Right Panel: Results & History Dumb Components -->
         <aside class="sidebar-cards">
             @if (currentShoppingList(); as list) {
             <app-shopping-list [shoppingList]="list"></app-shopping-list>
             } @else {
             <div class="empty-shopping-card">
-                <h3>Lista de Cumpărături</h3>
-                <p>După ce alegi meniul și zilele în stânga, apasă pe Salvează pentru a vedea lista agregată de
-                    ingrediente și prețul total estimat.</p>
+                <h3>Shopping List</h3>
+                <p>After choosing the menu and days on the left, click Save to see the aggregated ingredient list and estimated total cost.</p>
             </div>
             }
 

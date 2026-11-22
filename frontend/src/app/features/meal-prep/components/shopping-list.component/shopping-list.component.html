@@ -1,12 +1,12 @@
 <article class="shopping-card">
   <header class="card-header">
     <div>
-      <h3>Listă Cumpărături: {{ shoppingList.mealPlanName }}</h3>
-      <p class="subtitle">Gramaje agregate și scalate automat</p>
+      <h3>Shopping List: {{ shoppingList.mealPlanName }}</h3>
+      <p class="subtitle">Automatically aggregated and scaled quantities</p>
     </div>
     <div class="total-badge">
-      <span>Cost Estimat:</span>
-      <strong>{{ shoppingList.estimatedTotalCost ? shoppingList.estimatedTotalCost.toFixed(2) + ' RON' : 'Nespecificat' }}</strong>
+      <span>Estimated Cost:</span>
+      <strong>{{ shoppingList.estimatedTotalCost ? shoppingList.estimatedTotalCost.toFixed(2) + ' RON' : 'Not specified' }}</strong>
     </div>
   </header>
 
@@ -14,8 +14,8 @@
     <thead>
       <tr>
         <th>Ingredient</th>
-        <th>Cantitate Necesară</th>
-        <th>Cost Estimat</th>
+        <th>Required Quantity</th>
+        <th>Estimated Cost</th>
       </tr>
     </thead>
     <tbody>
@@ -23,7 +23,7 @@
         <tr>
           <td><strong>{{ item.foodName }}</strong></td>
           <td>{{ item.totalQuantityGrams }} g</td>
-          <td>{{ item.estimatedItemCost !== null ? item.estimatedItemCost.toFixed(2) + ' RON' : 'Fără istoric' }}</td>
+          <td>{{ item.estimatedItemCost !== null ? item.estimatedItemCost.toFixed(2) + ' RON' : 'No price history' }}</td>
         </tr>
       }
     </tbody>

@@ -10,11 +10,11 @@ import java.util.List;
 @Data
 public class RecipeRefineRequestDTO {
 
-    @NotNull(message = "Rețeta curentă este obligatorie.")
+    @NotNull(message = "Current recipe is required.")
     private GeneratedRecipeDTO currentRecipe;
 
-    @NotBlank(message = "Mesajul pentru AI este obligatoriu.")
-    @Size(max = 400, message = "Mesajul nu poate depăși 400 de caractere.")
+    @NotBlank(message = "Message for AI is required.")
+    @Size(max = 400, message = "Message cannot exceed 400 characters.")
     private String userMessage;
 
     private List<ChatMessageDTO> conversationHistory;

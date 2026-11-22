@@ -27,7 +27,7 @@ public class MealPlanService implements IMealPlanService {
     @Transactional
     public MealPlanDTO createMealPlan(MealPlanCreateDTO dto) {
         if (dto.getEndDate().isBefore(dto.getStartDate())) {
-            throw new BusinessException("Data de sfârșit nu poate fi înaintea datei de început.");
+            throw new BusinessException("End date cannot be before start date.");
         }
 
         MealPlan mealPlan = MealPlan.builder()
@@ -38,12 +38,12 @@ public class MealPlanService implements IMealPlanService {
 
         for (MealPlanItemCreateDTO itemDto : dto.getItems()) {
             if (itemDto.getConsumeDate().isBefore(dto.getStartDate()) || itemDto.getConsumeDate().isAfter(dto.getEndDate())) {
-                throw new BusinessException("Data mesei (" + itemDto.getConsumeDate() + ") trebuie să fie între "
-                        + dto.getStartDate() + " și " + dto.getEndDate());
+                throw new BusinessException("Meal date (" + itemDto.getConsumeDate() + ") must be between "
+                        + dto.getStartDate() + " and " + dto.getEndDate() + ".");
             }
 
             Recipe recipe = recipeRepository.findById(itemDto.getRecipeId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Rețeta nu a fost găsită: " + itemDto.getRecipeId()));
+                    .orElseThrow(() -> new ResourceNotFoundException("Recipe not found: " + itemDto.getRecipeId()));
 
             MealPlanItem mealPlanItem = MealPlanItem.builder()
                     .recipe(recipe)
@@ -71,7 +71,7 @@ public class MealPlanService implements IMealPlanService {
     @Transactional(readOnly = true)
     public MealPlanDTO getMealPlanById(UUID id) {
         MealPlan mealPlan = mealPlanRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Planul cu ID-ul " + id + " nu a fost găsit."));
+                .orElseThrow(() -> new ResourceNotFoundException("Meal plan with ID " + id + " was not found."));
         return mealPlanMapper.toDTO(mealPlan);
     }
 
@@ -79,7 +79,7 @@ public class MealPlanService implements IMealPlanService {
     @Transactional(readOnly = true)
     public ShoppingListResponseDTO generateShoppingList(UUID mealPlanId) {
         MealPlan mealPlan = mealPlanRepository.findById(mealPlanId)
-                .orElseThrow(() -> new ResourceNotFoundException("Planul cu ID-ul " + mealPlanId + " nu a fost găsit."));
+                .orElseThrow(() -> new ResourceNotFoundException("Meal plan with ID " + mealPlanId + " was not found."));
 
         Map<UUID, ShoppingListResponseDTO.ShoppingListItemDTO> aggregatedMap = new HashMap<>();
 
@@ -146,7 +146,7 @@ public class MealPlanService implements IMealPlanService {
     @Transactional
     public void deleteMealPlan(UUID id) {
         if (!mealPlanRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Planul cu ID-ul " + id + " nu a fost găsit.");
+            throw new ResourceNotFoundException("Meal plan with ID " + id + " was not found.");
         }
 
         mealPlanRepository.deleteById(id);

@@ -1,20 +1,20 @@
 <article class="food-card">
   <div>
     <h3 class="card-title">{{ food.name }}</h3>
-    
+
     <ul class="macro-list">
-      <li><span>Calorii</span> <strong>{{ food.calories }} kcal</strong></li>
-      <li><span>Proteine</span> <strong>{{ food.protein }}g</strong></li>
-      <li><span>Carbohidrați</span> <strong>{{ food.carbohydrates }}g</strong></li>
-      <li><span>Grăsimi</span> <strong>{{ food.fat }}g</strong></li>
-      <li><span>Fibre</span> <strong>{{ food.fiber }}g</strong></li>
+      <li><span>Calories</span> <strong>{{ food.calories }} kcal</strong></li>
+      <li><span>Protein</span> <strong>{{ food.protein }}g</strong></li>
+      <li><span>Carbs</span> <strong>{{ food.carbohydrates }}g</strong></li>
+      <li><span>Fat</span> <strong>{{ food.fat }}g</strong></li>
+      <li><span>Fiber</span> <strong>{{ food.fiber }}g</strong></li>
     </ul>
   </div>
 
   <div class="card-footer">
-    <span class="label">Sursă principală:</span>
-    <span 
-      class="macro-badge" 
+    <span class="label">Primary source:</span>
+    <span
+      class="macro-badge"
       [class.protein]="food.dominantMacro === 'PROTEIN'"
       [class.carbohydrate]="food.dominantMacro === 'CARBOHYDRATE'"
       [class.fat]="food.dominantMacro === 'FAT'">

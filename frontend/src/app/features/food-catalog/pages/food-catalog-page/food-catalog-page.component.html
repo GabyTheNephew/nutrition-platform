@@ -1,40 +1,40 @@
 <section class="catalog-container">
   <header class="catalog-header">
     <div>
-      <h2>Catalog Alimente</h2>
-      <p>Valori nutriționale exprimate per 100g de produs</p>
+      <h2>Food Catalog</h2>
+      <p>Nutritional values expressed per 100g of product</p>
     </div>
 
-    <!-- Bara de Căutare -->
+    <!-- Search Bar -->
     <div class="search-box">
-      <input #searchInput type="text" placeholder="Caută aliment (ex: pui, ovăz)..." (input)="onSearchInput($event)" />
+      <input #searchInput type="text" placeholder="Search food (e.g., chicken, oats)..." (input)="onSearchInput($event)" />
       @if (searchQuery()) {
       <button type="button" class="btn-clear" (click)="clearSearch(searchInput)">✕</button>
       }
     </div>
   </header>
 
-  <!-- Butoane de Filtrare după Macronutrient Dominant -->
+  <!-- Dominant Macronutrient Filter Buttons -->
   <nav class="filters-bar">
     <button type="button" class="filter-pill" [class.active]="activeFilter() === 'ALL'" (click)="onFilterChange('ALL')">
-      Toate
+      All
     </button>
     <button type="button" class="filter-pill protein" [class.active]="activeFilter() === 'PROTEIN'"
       (click)="onFilterChange('PROTEIN')">
-      Proteine
+      Protein
     </button>
     <button type="button" class="filter-pill carbohydrate" [class.active]="activeFilter() === 'CARBOHYDRATE'"
       (click)="onFilterChange('CARBOHYDRATE')">
-      Carbohidrați
+      Carbs
     </button>
     <button type="button" class="filter-pill fat" [class.active]="activeFilter() === 'FAT'"
       (click)="onFilterChange('FAT')">
-      Grăsimi
+      Fat
     </button>
   </nav>
 
   @if (isLoading()) {
-  <p class="status-msg">Se încarcă alimentele...</p>
+  <p class="status-msg">Loading food items...</p>
   } @else if (errorMessage()) {
   <p class="status-msg error">{{ errorMessage() }}</p>
   } @else {
@@ -43,7 +43,7 @@
     <app-food-card [food]="food"></app-food-card>
     } @empty {
     <div class="empty-state">
-      <p>Nu a fost găsit niciun aliment care să corespundă criteriilor.</p>
+      <p>No food items found matching your criteria.</p>
     </div>
     }
   </div>

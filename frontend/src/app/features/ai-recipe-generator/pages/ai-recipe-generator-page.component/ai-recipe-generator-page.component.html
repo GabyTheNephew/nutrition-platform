@@ -1,8 +1,8 @@
 <section class="ai-generator-container">
   <header class="page-header">
     <div>
-      <h2>Generator Rețete AI</h2>
-      <p>Generează variante calibrate automat pe profilul tău activ și ajustează-le prin chat</p>
+      <h2>AI Recipe Generator</h2>
+      <p>Generate meal options automatically calibrated to your active profile and refine them via chat</p>
     </div>
   </header>
 
@@ -13,11 +13,10 @@
   @if (successMessage()) {
     <div class="banner success">
       <span>{{ successMessage() }}</span>
-      <a routerLink="/recipes" class="link-recipes">Vezi în Rețete →</a>
+      <a routerLink="/recipes" class="link-recipes">View in Recipes →</a>
     </div>
   }
 
-  <!-- Zona 1: Panoul de generare -->
   <div class="controls-card">
     <div class="meal-type-pills">
       @for (meal of mealTypes; track meal.value) {
@@ -36,22 +35,21 @@
         type="text"
         [ngModel]="extraNotes()"
         (ngModelChange)="extraNotes.set($event)"
-        placeholder="Preferințe opționale (ex: rapid în 15 min, bogat în proteine)..."
+        placeholder="Optional preferences (e.g., quick 15-min meal, high protein)..."
       />
       <button
         type="button"
         class="btn-generate"
         [disabled]="isGenerating()"
         (click)="onGenerate()">
-        {{ isGenerating() ? 'Se generează rețetele...' : 'Generează Rețete AI' }}
+        {{ isGenerating() ? 'Generating recipes...' : 'Generate AI Recipes' }}
       </button>
     </div>
   </div>
 
-  <!-- Zona 2: Rezultate + Chat de rafinare -->
   @if (isGenerating()) {
     <div class="loading-box">
-      <p>Asistentul AI calculează variantele din catalogul tău de alimente...</p>
+      <p>AI Chef is calculating options from your food catalog...</p>
     </div>
   } @else if (generatedRecipes().length > 0) {
     <div class="workspace-layout">
@@ -63,21 +61,21 @@
             (click)="onSelectRecipe($index)">
             <div class="card-top">
               <div>
-                <span class="variant-badge">Varianta {{ $index + 1 }}</span>
+                <span class="variant-badge">Option {{ $index + 1 }}</span>
                 <h3>{{ recipe.name }}</h3>
               </div>
               <span class="kcal-badge">{{ recipe.estimatedCalories }} kcal</span>
             </div>
 
             <div class="macros-bar">
-              <span>Proteine: <strong>{{ recipe.estimatedProtein }}g</strong></span>
-              <span>Carbo: <strong>{{ recipe.estimatedCarbs }}g</strong></span>
-              <span>Grăsimi: <strong>{{ recipe.estimatedFat }}g</strong></span>
-              <span>Porții: <strong>{{ recipe.servings }}</strong></span>
+              <span>Protein: <strong>{{ recipe.estimatedProtein }}g</strong></span>
+              <span>Carbs: <strong>{{ recipe.estimatedCarbs }}g</strong></span>
+              <span>Fat: <strong>{{ recipe.estimatedFat }}g</strong></span>
+              <span>Servings: <strong>{{ recipe.servings }}</strong></span>
             </div>
 
             <div class="ingredients-block">
-              <h4>Ingrediente</h4>
+              <h4>Ingredients</h4>
               <ul>
                 @for (ing of recipe.ingredients; track ing.foodItemId) {
                   <li>
@@ -89,7 +87,7 @@
             </div>
 
             <div class="instructions-block">
-              <h4>Mod de preparare</h4>
+              <h4>Instructions</h4>
               <p>{{ recipe.instructions }}</p>
             </div>
 
@@ -98,7 +96,7 @@
                 type="button"
                 class="btn-refine"
                 (click)="$event.stopPropagation(); onSelectRecipe($index)">
-                {{ selectedIndex() === $index ? 'Selectată în Chat' : 'Ajustează în Chat' }}
+                {{ selectedIndex() === $index ? 'Selected in Chat' : 'Refine in Chat' }}
               </button>
               <button
                 type="button"
@@ -106,13 +104,13 @@
                 [disabled]="isSaving() || (!!savedRecipeIds()[$index] && !dirtyIndices().has($index))"
                 (click)="$event.stopPropagation(); onSaveRecipe(recipe, $index)">
                 @if (isSaving()) {
-                  Se salvează...
+                  Saving...
                 } @else if (savedRecipeIds()[$index] && dirtyIndices().has($index)) {
-                  Actualizează Rețeta
+                  Update Recipe
                 } @else if (savedRecipeIds()[$index]) {
-                  Salvată ✓
+                  Saved ✓
                 } @else {
-                  Salvează Rețeta
+                  Save Recipe
                 }
               </button>
             </div>
@@ -133,7 +131,7 @@
     </div>
   } @else {
     <div class="empty-state">
-      <p>Alege tipul mesei și apasă <strong>Generează Rețete AI</strong> pentru a primi sugestii personalizate.</p>
+      <p>Choose a meal type and click <strong>Generate AI Recipes</strong> to get personalized suggestions.</p>
     </div>
   }
 </section>
