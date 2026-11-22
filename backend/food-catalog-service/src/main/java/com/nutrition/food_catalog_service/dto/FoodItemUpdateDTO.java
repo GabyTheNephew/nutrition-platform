@@ -11,24 +11,24 @@ import lombok.*;
 @Builder
 public class FoodItemUpdateDTO {
 
-    @NotBlank(message = "Numele alimentului este obligatoriu.")
+    @NotBlank(message = "Food name is required.")
     private String name;
 
-    @PositiveOrZero(message = "Valoarea caloriilor nu poate fi negativă.")
+    @PositiveOrZero(message = "Calories cannot be negative.")
     private Double calories;
 
-    @NotNull(message = "Cantitatea de proteine este obligatorie.")
-    @PositiveOrZero(message = "Cantitatea de proteine nu poate fi negativă.")
+    @NotNull(message = "Protein amount is required.")
+    @PositiveOrZero(message = "Protein amount cannot be negative.")
     private Double protein;
 
-    @NotNull(message = "Cantitatea de carbohidrați este obligatorie.")
-    @PositiveOrZero(message = "Cantitatea de carbohidrați nu poate fi negativă.")
+    @NotNull(message = "Carbohydrates amount is required.")
+    @PositiveOrZero(message = "Carbohydrates amount cannot be negative.")
     private Double carbohydrates;
 
-    @NotNull(message = "Cantitatea de grăsimi este obligatorie.")
-    @PositiveOrZero(message = "Cantitatea de grăsimi nu poate fi negativă.")
+    @NotNull(message = "Fat amount is required.")
+    @PositiveOrZero(message = "Fat amount cannot be negative.")
     private Double fat;
 
-    @PositiveOrZero(message = "Cantitatea de fibre nu poate fi negativă.")
+    @PositiveOrZero(message = "Fiber amount cannot be negative.")
     private Double fiber;
 }

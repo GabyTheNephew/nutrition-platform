@@ -16,39 +16,39 @@ public class DataSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        // Populează doar dacă tabela din baza de date este complet goală
+        // Populate only if the database table is completely empty
         if (foodItemRepository.count() == 0) {
             List<FoodItem> defaultFoods = List.of(
                     FoodItem.builder()
-                            .name("Piept de pui")
+                            .name("Chicken Breast")
                             .protein(31.0)
                             .carbohydrates(0.0)
                             .fat(3.6)
                             .fiber(0.0)
                             .build(),
                     FoodItem.builder()
-                            .name("Fulgi de ovaz")
+                            .name("Rolled Oats")
                             .protein(13.5)
                             .carbohydrates(68.0)
                             .fat(7.0)
                             .fiber(10.0)
                             .build(),
                     FoodItem.builder()
-                            .name("Ulei de masline")
+                            .name("Olive Oil")
                             .protein(0.0)
                             .carbohydrates(0.0)
                             .fat(100.0)
                             .fiber(0.0)
                             .build(),
                     FoodItem.builder()
-                            .name("Oua intregi")
+                            .name("Whole Eggs")
                             .protein(13.0)
                             .carbohydrates(1.1)
                             .fat(11.0)
                             .fiber(0.0)
                             .build(),
                     FoodItem.builder()
-                            .name("Orez basmati")
+                            .name("Basmati Rice")
                             .protein(8.0)
                             .carbohydrates(78.0)
                             .fat(0.9)
@@ -56,8 +56,8 @@ public class DataSeeder implements CommandLineRunner {
                             .build()
             );
 
-            // saveAll apelează automat mecanismele @PrePersist din entitate,
-            // calculând caloriile totale și dominantMacro pentru fiecare aliment
+            // saveAll automatically triggers @PrePersist in the entity,
+            // calculating total calories and dominantMacro for each food item
             foodItemRepository.saveAll(defaultFoods);
         }
     }
